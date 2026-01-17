@@ -1,14 +1,16 @@
-import { getGenres, getNodes, getUseCases } from '@/lib/microcms';
+import { getGenres, getNodes, getUseCases, Genre, Node, UseCase } from '@/lib/microcms';
 
 export const revalidate = 60;
 
 export default async function Home() {
-  let genres, nodes, useCases;
+  let genres: Genre[] = [];
+  let nodes: Node[] = [];
+  let useCases: UseCase[] = [];
+
   try {
     [genres, nodes, useCases] = await Promise.all([getGenres(), getNodes(), getUseCases()]);
   } catch (error) {
     console.error('Failed to fetch:', error);
-    genres = []; nodes = []; useCases = [];
   }
 
   return (
@@ -29,16 +31,15 @@ export default async function Home() {
       </header>
 
       <main className="max-w-7xl mx-auto p-6">
-        <div className="grid lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 bg-slate-800/50 rounded-2xl p-6">
             <h2 className="text-lg font-bold text-white mb-4">スキルノード</h2>
-            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
-              {nodes.map((node, i) => (
-                <div key={node.id} className="p-4 rounded-xl border-2 transition-all hover:scale-105"
-                  style={{ borderColor: genres[i % genres.length]?.color || '#6366f1', background: `${genres[i % genres.length]?.color || '#6366f1'}20` }}>
-                  <div className="text-xs font-bold mb-1" style={{ color: genres[i % genres.length]?.color || '#6366f1' }}>Lv.{node.level}</div>
-                  <h3 className="font-bold text-white">{node.name}</h3>
-                  <p className="text-xs text-gray-300 mt-1 line-clamp-2">{node.description}</p>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              {nodes.map((node) => (
+                <div key={node.id} className="bg-slate-700/50 rounded-xl p-4 hover:bg-slate-700 transition cursor-pointer">
+                  <div className="text-xs text-indigo-400 mb-1">Lv.{node.level}</div>
+                  <h3 className="font-semibold text-white">{node.name}</h3>
+                  <p className="text-xs text-gray-400 mt-1 line-clamp-2">{node.description}</p>
                 </div>
               ))}
             </div>
@@ -46,22 +47,27 @@ export default async function Home() {
 
           <div className="space-y-6">
             <div className="bg-slate-800/50 rounded-2xl p-4">
-              <h3 className="font-bold text-white mb-3">ジャンル</h3>
-              {genres.map((g) => (
-                <div key={g.id} className="flex items-center gap-2 p-2 rounded hover:bg-slate-700/50">
-                  <div className="w-3 h-3 rounded-full" style={{ backgroundColor: g.color }} />
-                  <span className="text-sm text-gray-200">{g.name}</span>
-                </div>
-              ))}
+              <h3 className="text-lg font-bold text-white mb-3">ジャンル</h3>
+              <div className="space-y-2">
+                {genres.map((genre) => (
+                  <div key={genre.id} className="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-700/50 transition">
+                    <div className="w-4 h-4 rounded-full" style={{ backgroundColor: genre.color }} />
+                    <span className="text-sm text-gray-200">{genre.name}</span>
+                  </div>
+                ))}
+              </div>
             </div>
+
             <div className="bg-slate-800/50 rounded-2xl p-4">
-              <h3 className="font-bold text-white mb-3">活用事例</h3>
-              {useCases.map((u) => (
-                <div key={u.id} className="p-2 rounded hover:bg-slate-700/50 mb-2">
-                  <h4 className="text-sm font-semibold text-white">{u.name}</h4>
-                  <p className="text-xs text-gray-400 line-clamp-2">{u.description}</p>
-                </div>
-              ))}
+              <h3 className="text-lg font-bold text-white mb-3">活用事例</h3>
+              <div className="space-y-2">
+                {useCases.map((uc) => (
+                  <div key={uc.id} className="p-3 bg-slate-700/30 rounded-lg hover:bg-slate-700/50 transition">
+                    <h4 className="text-sm font-semibold text-white">{uc.name}</h4>
+                    <p className="text-xs text-gray-400 mt-1">{uc.description}</p>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
