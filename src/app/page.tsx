@@ -1,10 +1,12 @@
-import { getGenres, getNodes, getUseCases } from '@/lib/microcms';
+import { getGenres, getNodes, getUseCases, Genre, Node, UseCase } from '@/lib/microcms';
 import SkillTree from '@/components/SkillTree';
 
 export const revalidate = 60;
 
 export default async function Home() {
-  let genres, nodes, useCases;
+  let genres: Genre[] = [];
+  let nodes: Node[] = [];
+  let useCases: UseCase[] = [];
 
   try {
     [genres, nodes, useCases] = await Promise.all([
@@ -14,9 +16,6 @@ export default async function Home() {
     ]);
   } catch (error) {
     console.error('Failed to fetch data from microCMS:', error);
-    genres = [];
-    nodes = [];
-    useCases = [];
   }
 
   return (
