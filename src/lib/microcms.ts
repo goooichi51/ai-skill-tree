@@ -25,6 +25,7 @@ export type Node = {
   name: string;
   description: string;
   level: number;
+  genre?: Genre;
 };
 
 export type UseCase = {
