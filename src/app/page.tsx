@@ -53,6 +53,7 @@ export default async function Home() {
       <footer className="bg-slate-900/80 border-t border-slate-700 mt-8">
         <div className="max-w-7xl mx-auto px-4 py-6 text-center text-sm text-gray-400">
           <p>AI Skill Tree - ビジネスパーソンのためのAI活用ガイド</p>
+ジャンルレベル活用事例git add -A && git commit -m "Improve SkillTree: genre colors, selection animation, glow effects" && git push
         </div>
       </footer>
     </div>
