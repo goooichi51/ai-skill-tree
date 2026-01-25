@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Skill Map 管理ツール</title>
+  <style>
+    :root {
+      --primary: #667eea;
+      --primary-dark: #5a6fd6;
+      --success: #10b981;
+      --error: #ef4444;
+      --bg: #0f172a;
+      --bg-card: #1e293b;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --border: #334155;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 2rem;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, var(--primary) 0%, #a855f7 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle {
+      color: var(--text-muted);
+      margin-bottom: 2rem;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      border: 1px solid var(--border);
+    }
+
+    .card h2 {
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .input-group {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    input[type="text"], input[type="url"] {
+      flex: 1;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 1rem;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    select {
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    button {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .btn-success {
+      background: var(--success);
+      color: white;
+    }
+
+    .btn-success:hover {
+      background: #059669;
+    }
+
+    .preview-box {
+      background: var(--bg);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-top: 1rem;
+      display: none;
+    }
+
+    .preview-box.show {
+      display: block;
+    }
+
+    .preview-title {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .preview-meta {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .preview-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+
+    .tag {
+      background: var(--primary);
+      color: white;
+      padding: 0.25rem 0.75rem;
+      border-radius: 100px;
+      font-size: 0.8rem;
+    }
+
+    .message {
+      padding: 1rem;
+      border-radius: 8px;
+      margin-top: 1rem;
+      display: none;
+    }
+
+    .message.show {
+      display: block;
+    }
+
+    .message.success {
+      background: rgba(16, 185, 129, 0.2);
+      border: 1px solid var(--success);
+      color: var(--success);
+    }
+
+    .message.error {
+      background: rgba(239, 68, 68, 0.2);
+      border: 1px solid var(--error);
+      color: var(--error);
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-right: 0.5rem;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .source-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .source-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem;
+      background: var(--bg);
+      border-radius: 8px;
+    }
+
+    .source-color {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .source-name {
+      flex: 1;
+    }
+
+    .source-type {
+      color: var(--text-muted);
+      font-size: 0.8rem;
+    }
+
+    .toggle {
+      position: relative;
+      width: 44px;
+      height: 24px;
+      background: var(--border);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .toggle.active {
+      background: var(--success);
+    }
+
+    .toggle::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 20px;
+      height: 20px;
+      background: white;
+      border-radius: 50%;
+      transition: transform 0.2s;
+    }
+
+    .toggle.active::after {
+      transform: translateX(20px);
+    }
+
+    .section-empty {
+      color: var(--text-muted);
+      font-style: italic;
+      padding: 0.5rem;
+    }
+
+    .help-text {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      margin-top: 0.5rem;
+    }
+
+    .links-bar {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .link-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.6rem 1rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .link-btn .icon {
+      font-size: 1.1rem;
+    }
+
+    .link-btn.local {
+      background: var(--bg-card);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .link-btn.local:hover {
+      border-color: var(--primary);
+      background: rgba(102, 126, 234, 0.1);
+    }
+
+    .link-btn.public {
+      background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+      color: white;
+    }
+
+    .link-btn.public:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+
+    .form-row {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-end;
+      flex-wrap: wrap;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .form-group label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .form-group.flex-1 {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .file-list {
+      background: var(--bg);
+      border-radius: 8px;
+      padding: 0.75rem;
+      max-height: 200px;
+      overflow-y: auto;
+      font-family: monospace;
+      font-size: 0.85rem;
+    }
+
+    .file-item {
+      display: flex;
+      gap: 0.5rem;
+      padding: 0.25rem 0;
+    }
+
+    .file-status {
+      color: var(--success);
+      font-weight: bold;
+      width: 1.5rem;
+    }
+
+    .file-status.modified {
+      color: #f59e0b;
+    }
+
+    .file-status.deleted {
+      color: var(--error);
+    }
+
+    .file-path {
+      color: var(--text-muted);
+    }
+
+    .progress-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .progress-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.5rem 0.75rem;
+      background: var(--bg);
+      border-radius: 8px;
+    }
+
+    .progress-icon {
+      width: 20px;
+      text-align: center;
+    }
+
+    .progress-item.pending .progress-icon {
+      color: var(--text-muted);
+    }
+
+    .progress-item.running .progress-icon {
+      color: var(--primary);
+    }
+
+    .progress-item.success .progress-icon {
+      color: var(--success);
+    }
+
+    .progress-item.error .progress-icon {
+      color: var(--error);
+    }
+
+    .progress-label {
+      flex: 1;
+    }
+
+    .progress-output {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .btn-secondary {
+      background: var(--border);
+      color: var(--text);
+    }
+
+    .btn-secondary:hover {
+      background: #475569;
+    }
+
+    .btn-success:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .no-changes {
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    .link-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.6rem 0.75rem;
+      background: var(--bg);
+      border-radius: 8px;
+      margin-bottom: 0.5rem;
+    }
+
+    .link-item .link-path {
+      flex: 1;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .link-item .link-arrow {
+      color: var(--text-muted);
+    }
+
+    .link-item .link-node {
+      color: var(--text);
+    }
+
+    .link-item .btn-remove {
+      background: transparent;
+      color: var(--error);
+      padding: 0.25rem 0.5rem;
+      font-size: 0.8rem;
+      border: 1px solid var(--error);
+    }
+
+    .link-item .btn-remove:hover {
+      background: rgba(239, 68, 68, 0.2);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>AI Skill Map 管理ツール</h1>
+    <p class="subtitle">URLを貼り付けてコンテンツを追加</p>
+
+    <div class="links-bar">
+      <a href="http://localhost:8080" target="_blank" class="link-btn local">
+        <span class="icon">🖥️</span>
+        ローカルプレビュー
+      </a>
+      <a href="https://your-username.github.io/AI_Skill_Map/" target="_blank" class="link-btn public">
+        <span class="icon">🌐</span>
+        公開サイト
+      </a>
+    </div>
+
+    <div class="card">
+      <h2>📎 コンテンツを追加</h2>
+
+      <div class="form-row">
+        <div class="form-group flex-1">
+          <label for="url">URL</label>
+          <input type="url" id="url" placeholder="YouTube、Note.com、X、ブログのURLを貼り付け">
+        </div>
+        <button class="btn-primary" id="previewBtn" onclick="preview()">
+          プレビュー
+        </button>
+      </div>
+
+      <div class="preview-box" id="previewBox">
+        <div class="preview-title" id="previewTitle"></div>
+        <div class="preview-meta" id="previewMeta"></div>
+        <div class="preview-tags" id="previewTags"></div>
+
+        <div class="form-row" style="margin-top: 1rem;">
+          <div class="form-group">
+            <label for="category">カテゴリ</label>
+            <select id="category">
+              <option value="chat-ai">対話型AI</option>
+              <option value="generative-ai">生成AI</option>
+              <option value="automation">自動化</option>
+              <option value="development">開発</option>
+              <option value="frontier">先端技術</option>
+            </select>
+          </div>
+          <button class="btn-success" id="addBtn" onclick="addContent()">
+            追加する
+          </button>
+        </div>
+      </div>
+
+      <div class="message" id="message"></div>
+
+      <p class="help-text">
+        対応: YouTube動画、Note.com記事、Xポスト、一般ブログ記事
+      </p>
+    </div>
+
+    <div class="card">
+      <h2>📺 登録済みソース</h2>
+      <div id="sourceList">
+        <p class="section-empty">読み込み中...</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>🔗 リンク管理</h2>
+      <p class="help-text" style="margin-bottom: 1rem;">スキルツリーのノード間リンクを追加・削除できます</p>
+
+      <div class="form-row">
+        <div class="form-group flex-1">
+          <label for="linkSource">リンク元</label>
+          <select id="linkSource">
+            <option value="">-- 選択してください --</option>
+          </select>
+        </div>
+        <div style="display: flex; align-items: flex-end; padding-bottom: 0.75rem; font-size: 1.5rem; color: var(--text-muted);">→</div>
+        <div class="form-group flex-1">
+          <label for="linkTarget">リンク先</label>
+          <select id="linkTarget">
+            <option value="">-- 選択してください --</option>
+          </select>
+        </div>
+        <button class="btn-primary" id="addLinkBtn" onclick="addLink()">
+          追加
+        </button>
+      </div>
+
+      <div style="margin-top: 1.5rem;">
+        <h3 style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.75rem;">追加したリンク</h3>
+        <div id="customLinksList">
+          <p class="section-empty">追加したリンクはありません</p>
+        </div>
+      </div>
+
+      <div style="margin-top: 1.5rem; border-top: 1px solid var(--border); padding-top: 1.5rem;">
+        <h3 style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.75rem;">既存リンクを除外</h3>
+        <p class="help-text" style="margin-bottom: 1rem;">自動生成されたリンクを非表示にできます</p>
+        <div class="form-row">
+          <div class="form-group flex-1">
+            <label for="excludeSource">リンク元</label>
+            <select id="excludeSource">
+              <option value="">-- 選択してください --</option>
+            </select>
+          </div>
+          <div style="display: flex; align-items: flex-end; padding-bottom: 0.75rem; font-size: 1.5rem; color: var(--text-muted);">→</div>
+          <div class="form-group flex-1">
+            <label for="excludeTarget">リンク先</label>
+            <select id="excludeTarget">
+              <option value="">-- 選択してください --</option>
+            </select>
+          </div>
+          <button class="btn-secondary" id="excludeLinkBtn" onclick="excludeLink()">
+            除外
+          </button>
+        </div>
+      </div>
+
+      <div style="margin-top: 1.5rem;">
+        <h3 style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.75rem;">除外したリンク</h3>
+        <div id="excludedLinksList">
+          <p class="section-empty">除外したリンクはありません</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>🚀 サイトを公開</h2>
+
+      <div id="gitStatus">
+        <p class="section-empty">状態を確認中...</p>
+      </div>
+
+      <div id="publishForm" style="display: none;">
+        <div class="form-group" style="margin-top: 1rem;">
+          <label for="commitMessage">コミットメッセージ</label>
+          <input type="text" id="commitMessage" placeholder="コンテンツ更新" value="コンテンツ更新">
+        </div>
+
+        <div class="btn-row">
+          <button class="btn-secondary" onclick="loadGitStatus()">
+            状態を更新
+          </button>
+          <button class="btn-success" id="publishBtn" onclick="publish()">
+            公開する
+          </button>
+        </div>
+      </div>
+
+      <div id="publishProgress" style="display: none;">
+        <div class="progress-list">
+          <div class="progress-item pending" id="step-build">
+            <span class="progress-icon">○</span>
+            <span class="progress-label">ビルド</span>
+            <span class="progress-output"></span>
+          </div>
+          <div class="progress-item pending" id="step-add">
+            <span class="progress-icon">○</span>
+            <span class="progress-label">ステージング</span>
+            <span class="progress-output"></span>
+          </div>
+          <div class="progress-item pending" id="step-commit">
+            <span class="progress-icon">○</span>
+            <span class="progress-label">コミット</span>
+            <span class="progress-output"></span>
+          </div>
+          <div class="progress-item pending" id="step-push">
+            <span class="progress-icon">○</span>
+            <span class="progress-label">プッシュ</span>
+            <span class="progress-output"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="message" id="publishMessage"></div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = 'http://localhost:3456';
+    let currentContent = null;
+
+    // URLからコンテンツをプレビュー
+    async function preview() {
+      const url = document.getElementById('url').value.trim();
+      if (!url) {
+        showMessage('URLを入力してください', 'error');
+        return;
+      }
+
+      const btn = document.getElementById('previewBtn');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span>解析中...';
+
+      try {
+        const response = await fetch(`${API_BASE}/api/preview`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || 'エラーが発生しました');
+        }
+
+        currentContent = data.content;
+
+        // プレビュー表示
+        document.getElementById('previewTitle').textContent = data.content.title;
+
+        const meta = [];
+        if (data.content.source.channel) meta.push(`チャンネル: ${data.content.source.channel}`);
+        if (data.content.source.author) meta.push(`著者: ${data.content.source.author}`);
+        if (data.content.source.publishedAt) meta.push(`公開日: ${data.content.source.publishedAt}`);
+        document.getElementById('previewMeta').textContent = meta.join(' | ');
+
+        const tagsContainer = document.getElementById('previewTags');
+        tagsContainer.innerHTML = data.content.suggestedTags
+          .map(tag => `<span class="tag">${tag}</span>`)
+          .join('');
+
+        document.getElementById('previewBox').classList.add('show');
+        hideMessage();
+
+      } catch (error) {
+        showMessage(error.message, 'error');
+        document.getElementById('previewBox').classList.remove('show');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'プレビュー';
+      }
+    }
+
+    // コンテンツを追加
+    async function addContent() {
+      const url = document.getElementById('url').value.trim();
+      const category = document.getElementById('category').value;
+
+      const btn = document.getElementById('addBtn');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span>追加中...';
+
+      try {
+        const response = await fetch(`${API_BASE}/api/add`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url, category }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || 'エラーが発生しました');
+        }
+
+        showMessage(`✅ 追加しました: ${data.filePath}`, 'success');
+
+        // フォームをリセット
+        document.getElementById('url').value = '';
+        document.getElementById('previewBox').classList.remove('show');
+        currentContent = null;
+
+        // ソースリストを更新
+        loadSources();
+
+      } catch (error) {
+        showMessage(error.message, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '追加する';
+      }
+    }
+
+    // ソースリストを読み込み
+    async function loadSources() {
+      try {
+        const response = await fetch(`${API_BASE}/api/sources`);
+        const data = await response.json();
+
+        const container = document.getElementById('sourceList');
+        const items = [];
+
+        // YouTube
+        for (const [id, info] of Object.entries(data.youtube?.channels || {})) {
+          items.push({ type: 'youtube', id, ...info, typeLabel: 'YouTube' });
+        }
+
+        // Note
+        for (const [id, info] of Object.entries(data.note?.authors || {})) {
+          items.push({ type: 'note', id, ...info, typeLabel: 'Note.com' });
+        }
+
+        // X
+        for (const [id, info] of Object.entries(data.x?.users || {})) {
+          items.push({ type: 'x', id, ...info, typeLabel: 'X' });
+        }
+
+        // Blog
+        for (const [id, info] of Object.entries(data.blog?.domains || {})) {
+          items.push({ type: 'blog', id, ...info, typeLabel: 'ブログ' });
+        }
+
+        if (items.length === 0) {
+          container.innerHTML = '<p class="section-empty">登録されたソースはありません</p>';
+          return;
+        }
+
+        container.innerHTML = '<div class="source-list">' + items.map(item => `
+          <div class="source-item">
+            <span class="source-color" style="background-color: ${item.color}"></span>
+            <span class="source-name">${item.name}</span>
+            <span class="source-type">${item.typeLabel}</span>
+            <div class="toggle ${item.enabled ? 'active' : ''}"
+                 onclick="toggleSource('${item.type}', '${item.id}', ${!item.enabled})"
+                 title="${item.enabled ? '色分け有効' : '色分け無効'}">
+            </div>
+          </div>
+        `).join('') + '</div>';
+
+      } catch (error) {
+        document.getElementById('sourceList').innerHTML =
+          '<p class="section-empty">ソースの読み込みに失敗しました</p>';
+      }
+    }
+
+    // ソースの有効/無効を切り替え
+    async function toggleSource(type, id, enabled) {
+      try {
+        await fetch(`${API_BASE}/api/sources/toggle`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ type, id, enabled }),
+        });
+        loadSources();
+      } catch (error) {
+        showMessage('設定の更新に失敗しました', 'error');
+      }
+    }
+
+    // メッセージ表示
+    function showMessage(text, type) {
+      const msg = document.getElementById('message');
+      msg.textContent = text;
+      msg.className = `message show ${type}`;
+    }
+
+    function hideMessage() {
+      document.getElementById('message').classList.remove('show');
+    }
+
+    // Enter キーでプレビュー
+    document.getElementById('url').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        preview();
+      }
+    });
+
+    // Git状態を読み込み
+    async function loadGitStatus() {
+      const container = document.getElementById('gitStatus');
+      const form = document.getElementById('publishForm');
+
+      try {
+        const response = await fetch(`${API_BASE}/api/git/status`);
+        const data = await response.json();
+
+        if (!data.hasChanges) {
+          container.innerHTML = '<p class="no-changes">変更はありません</p>';
+          form.style.display = 'none';
+          return;
+        }
+
+        const fileList = data.files.map(f => {
+          let statusClass = '';
+          let statusIcon = '✚';
+          if (f.status === 'M') {
+            statusClass = 'modified';
+            statusIcon = 'M';
+          } else if (f.status === 'D') {
+            statusClass = 'deleted';
+            statusIcon = 'D';
+          } else if (f.status === '??' || f.status === 'A') {
+            statusIcon = '✚';
+          }
+          return `<div class="file-item">
+            <span class="file-status ${statusClass}">${statusIcon}</span>
+            <span class="file-path">${f.file}</span>
+          </div>`;
+        }).join('');
+
+        container.innerHTML = `
+          <p style="margin-bottom: 0.5rem;">変更ファイル: ${data.files.length}件</p>
+          <div class="file-list">${fileList}</div>
+        `;
+        form.style.display = 'block';
+
+      } catch (error) {
+        container.innerHTML = '<p class="section-empty">Git状態の取得に失敗しました</p>';
+        form.style.display = 'none';
+      }
+    }
+
+    // サイトを公開
+    async function publish() {
+      const message = document.getElementById('commitMessage').value.trim() || 'コンテンツ更新';
+      const btn = document.getElementById('publishBtn');
+      const progressDiv = document.getElementById('publishProgress');
+      const msgDiv = document.getElementById('publishMessage');
+
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span>公開中...';
+      progressDiv.style.display = 'block';
+      msgDiv.classList.remove('show');
+
+      // 進捗をリセット
+      ['build', 'add', 'commit', 'push'].forEach(step => {
+        const el = document.getElementById(`step-${step}`);
+        el.className = 'progress-item pending';
+        el.querySelector('.progress-icon').textContent = '○';
+        el.querySelector('.progress-output').textContent = '';
+      });
+
+      // ビルドステップを実行中に
+      document.getElementById('step-build').className = 'progress-item running';
+      document.getElementById('step-build').querySelector('.progress-icon').textContent = '◎';
+
+      try {
+        const response = await fetch(`${API_BASE}/api/git/publish`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message }),
+        });
+
+        const data = await response.json();
+
+        // 各ステップの結果を表示
+        data.steps.forEach(step => {
+          const el = document.getElementById(`step-${step.step}`);
+          if (step.success) {
+            el.className = 'progress-item success';
+            el.querySelector('.progress-icon').textContent = '✓';
+            el.querySelector('.progress-output').textContent = step.output || '';
+          } else {
+            el.className = 'progress-item error';
+            el.querySelector('.progress-icon').textContent = '✗';
+            el.querySelector('.progress-output').textContent = step.error || 'エラー';
+          }
+        });
+
+        if (data.success) {
+          showPublishMessage('公開が完了しました！', 'success');
+          loadGitStatus();
+        } else {
+          showPublishMessage(data.error || '公開に失敗しました', 'error');
+        }
+
+      } catch (error) {
+        showPublishMessage('公開処理中にエラーが発生しました', 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '公開する';
+      }
+    }
+
+    function showPublishMessage(text, type) {
+      const msg = document.getElementById('publishMessage');
+      msg.textContent = text;
+      msg.className = `message show ${type}`;
+    }
+
+    // ノード一覧を読み込み
+    async function loadNodes() {
+      try {
+        const response = await fetch(`${API_BASE}/api/nodes`);
+        const data = await response.json();
+
+        const sourceSelect = document.getElementById('linkSource');
+        const targetSelect = document.getElementById('linkTarget');
+        const excludeSourceSelect = document.getElementById('excludeSource');
+        const excludeTargetSelect = document.getElementById('excludeTarget');
+
+        // 選択肢をクリア
+        sourceSelect.innerHTML = '<option value="">-- 選択してください --</option>';
+        targetSelect.innerHTML = '<option value="">-- 選択してください --</option>';
+        excludeSourceSelect.innerHTML = '<option value="">-- 選択してください --</option>';
+        excludeTargetSelect.innerHTML = '<option value="">-- 選択してください --</option>';
+
+        // ノードをソート
+        const nodes = data.nodes.sort((a, b) => a.title.localeCompare(b.title, 'ja'));
+
+        for (const node of nodes) {
+          const option1 = document.createElement('option');
+          option1.value = node.slug;
+          option1.textContent = node.title;
+          sourceSelect.appendChild(option1);
+
+          const option2 = document.createElement('option');
+          option2.value = node.slug;
+          option2.textContent = node.title;
+          targetSelect.appendChild(option2);
+
+          const option3 = document.createElement('option');
+          option3.value = node.slug;
+          option3.textContent = node.title;
+          excludeSourceSelect.appendChild(option3);
+
+          const option4 = document.createElement('option');
+          option4.value = node.slug;
+          option4.textContent = node.title;
+          excludeTargetSelect.appendChild(option4);
+        }
+      } catch (error) {
+        console.error('Failed to load nodes:', error);
+      }
+    }
+
+    // カスタムリンクを読み込み
+    async function loadCustomLinks() {
+      try {
+        const response = await fetch(`${API_BASE}/api/links`);
+        const data = await response.json();
+
+        const linksContainer = document.getElementById('customLinksList');
+        const excludedContainer = document.getElementById('excludedLinksList');
+
+        // 追加したリンク
+        if (data.links && data.links.length > 0) {
+          linksContainer.innerHTML = data.links.map(link => `
+            <div class="link-item">
+              <div class="link-path">
+                <span class="link-node">${link.sourceTitle || link.source}</span>
+                <span class="link-arrow">→</span>
+                <span class="link-node">${link.targetTitle || link.target}</span>
+              </div>
+              <button class="btn-remove" onclick="removeLink('${link.source}', '${link.target}')">削除</button>
+            </div>
+          `).join('');
+        } else {
+          linksContainer.innerHTML = '<p class="section-empty">追加したリンクはありません</p>';
+        }
+
+        // 除外したリンク
+        if (data.excludedLinks && data.excludedLinks.length > 0) {
+          excludedContainer.innerHTML = data.excludedLinks.map(link => `
+            <div class="link-item">
+              <div class="link-path">
+                <span class="link-node">${link.sourceTitle || link.source}</span>
+                <span class="link-arrow">→</span>
+                <span class="link-node">${link.targetTitle || link.target}</span>
+              </div>
+              <button class="btn-remove" onclick="restoreLink('${link.source}', '${link.target}')">復元</button>
+            </div>
+          `).join('');
+        } else {
+          excludedContainer.innerHTML = '<p class="section-empty">除外したリンクはありません</p>';
+        }
+
+      } catch (error) {
+        console.error('Failed to load custom links:', error);
+      }
+    }
+
+    // リンクを追加
+    async function addLink() {
+      const source = document.getElementById('linkSource').value;
+      const target = document.getElementById('linkTarget').value;
+
+      if (!source || !target) {
+        showMessage('リンク元とリンク先を選択してください', 'error');
+        return;
+      }
+
+      if (source === target) {
+        showMessage('同じノードを選択することはできません', 'error');
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_BASE}/api/links`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ source, target }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || 'エラーが発生しました');
+        }
+
+        showMessage('リンクを追加しました', 'success');
+        loadCustomLinks();
+
+        // 選択をリセット
+        document.getElementById('linkSource').value = '';
+        document.getElementById('linkTarget').value = '';
+
+      } catch (error) {
+        showMessage(error.message, 'error');
+      }
+    }
+
+    // リンクを削除
+    async function removeLink(source, target) {
+      try {
+        const response = await fetch(`${API_BASE}/api/links`, {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ source, target }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || 'エラーが発生しました');
+        }
+
+        loadCustomLinks();
+
+      } catch (error) {
+        showMessage(error.message, 'error');
+      }
+    }
+
+    // 除外したリンクを復元
+    async function restoreLink(source, target) {
+      try {
+        const response = await fetch(`${API_BASE}/api/links/restore`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ source, target }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || 'エラーが発生しました');
+        }
+
+        loadCustomLinks();
+
+      } catch (error) {
+        showMessage(error.message, 'error');
+      }
+    }
+
+    // リンクを除外
+    async function excludeLink() {
+      const source = document.getElementById('excludeSource').value;
+      const target = document.getElementById('excludeTarget').value;
+
+      if (!source || !target) {
+        showMessage('リンク元とリンク先を選択してください', 'error');
+        return;
+      }
+
+      if (source === target) {
+        showMessage('同じノードを選択することはできません', 'error');
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_BASE}/api/links/exclude`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ source, target }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || 'エラーが発生しました');
+        }
+
+        showMessage('リンクを除外しました', 'success');
+        loadCustomLinks();
+
+        // 選択をリセット
+        document.getElementById('excludeSource').value = '';
+        document.getElementById('excludeTarget').value = '';
+
+      } catch (error) {
+        showMessage(error.message, 'error');
+      }
+    }
+
+    // 初期読み込み
+    loadSources();
+    loadGitStatus();
+    loadNodes();
+    loadCustomLinks();
+  </script>
+</body>
+</html>

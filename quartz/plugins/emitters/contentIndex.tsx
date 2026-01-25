@@ -7,8 +7,24 @@ import { QuartzEmitterPlugin } from "../types"
 import { toHtml } from "hast-util-to-html"
 import { write } from "./helpers"
 import { i18n } from "../../i18n"
+import * as fs from "fs"
+import * as path from "path"
 
 export type ContentIndexMap = Map<FullSlug, ContentDetails>
+
+// ソース情報の型定義
+export type SourceInfo = {
+  type: "youtube" | "note" | "x" | "blog" | "manual"
+  url?: string
+  channel?: string
+  channelId?: string
+  author?: string
+  authorId?: string
+  domain?: string
+  publishedAt?: string
+  thumbnail?: string
+}
+
 export type ContentDetails = {
   slug: FullSlug
   filePath: FilePath
@@ -19,6 +35,7 @@ export type ContentDetails = {
   richContent?: string
   date?: Date
   description?: string
+  source?: SourceInfo
 }
 
 interface Options {
@@ -115,6 +132,7 @@ export const ContentIndex: QuartzEmitterPlugin<Partial<Options>> = (opts) => {
               : undefined,
             date: date,
             description: file.data.description ?? "",
+            source: file.data.frontmatter?.source as SourceInfo | undefined,
           })
         }
       }
@@ -153,6 +171,24 @@ export const ContentIndex: QuartzEmitterPlugin<Partial<Options>> = (opts) => {
         ctx,
         content: JSON.stringify(simplifiedIndex),
         slug: fp,
+        ext: ".json",
+      })
+
+      // カスタムリンク設定を出力
+      const customLinksPath = path.join(process.cwd(), "content/_config/custom-links.json")
+      let customLinks = { links: [], excludedLinks: [] }
+      try {
+        if (fs.existsSync(customLinksPath)) {
+          customLinks = JSON.parse(fs.readFileSync(customLinksPath, "utf-8"))
+        }
+      } catch (e) {
+        console.warn("Failed to load custom-links.json:", e)
+      }
+
+      yield write({
+        ctx,
+        content: JSON.stringify(customLinks),
+        slug: joinSegments("static", "customLinks") as FullSlug,
         ext: ".json",
       })
     },

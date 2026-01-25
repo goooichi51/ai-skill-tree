@@ -17,7 +17,8 @@
     "check": "tsc --noEmit && npx prettier . --check",
     "format": "npx prettier . --write",
     "test": "tsx --test",
-    "profile": "0x -D prof ./quartz/bootstrap-cli.mjs build --concurrency=1"
+    "profile": "0x -D prof ./quartz/bootstrap-cli.mjs build --concurrency=1",
+    "admin": "npx tsx scripts/admin-server.ts"
   },
   "engines": {
     "npm": ">=10.9.2",
@@ -42,13 +43,19 @@
     "@tweenjs/tween.js": "^25.0.0",
     "ansi-truncate": "^1.4.0",
     "async-mutex": "^0.5.0",
+    "cheerio": "^1.2.0",
     "chokidar": "^5.0.0",
     "cli-spinner": "^0.2.10",
+    "commander": "^14.0.2",
+    "cors": "^2.8.6",
     "d3": "^7.9.0",
+    "dotenv": "^17.2.3",
     "esbuild-sass-plugin": "^3.6.0",
+    "express": "^5.2.1",
     "flexsearch": "^0.8.205",
     "github-slugger": "^2.0.0",
     "globby": "^16.1.0",
+    "googleapis": "^170.1.0",
     "gray-matter": "^4.0.3",
     "hast-util-to-html": "^9.0.5",
     "hast-util-to-jsx-runtime": "^2.3.6",
@@ -98,7 +105,10 @@
     "yargs": "^18.0.0"
   },
   "devDependencies": {
+    "@types/cheerio": "^0.22.35",
+    "@types/cors": "^2.8.19",
     "@types/d3": "^7.4.3",
+    "@types/express": "^5.0.6",
     "@types/hast": "^3.0.4",
     "@types/js-yaml": "^4.0.9",
     "@types/node": "^25.0.9",

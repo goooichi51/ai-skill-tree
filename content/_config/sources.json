@@ -1,0 +1,25 @@
+{
+  "youtube": {
+    "channels": {
+      "UCvM5YYWwfLwpcQgbRr68JLQ": {
+        "name": "Adrian Twarog",
+        "color": "#ff6b6b",
+        "enabled": false
+      },
+      "UC9AuyS7U4PxeDSNMJ2srarA": {
+        "name": "AIでサボろうチャンネル",
+        "color": "#45b7d1",
+        "enabled": false
+      }
+    }
+  },
+  "note": {
+    "authors": {}
+  },
+  "x": {
+    "users": {}
+  },
+  "blog": {
+    "domains": {}
+  }
+}

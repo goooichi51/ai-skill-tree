@@ -1,3 +1,938 @@
 @use "./base.scss";
 
-// put your custom CSS here!
+// ========================================
+// AI Skill Tree Map - Modern Design
+// ========================================
+
+:root {
+  --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --gradient-dark: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.08);
+  --shadow-medium: 0 8px 30px rgba(0, 0, 0, 0.12);
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.25s ease;
+}
+
+// ========================================
+// グローバル
+// ========================================
+
+body {
+  background: linear-gradient(180deg, var(--light) 0%, var(--lightgray) 100%);
+}
+
+// ========================================
+// 左サイドバー
+// ========================================
+
+.left-sidebar {
+  @media (min-width: 1200px) {
+    width: 260px !important;
+    min-width: 260px !important;
+  }
+}
+
+// ========================================
+// 右サイドバーを非表示（トップページ以外は小さく）
+// ========================================
+
+.right-sidebar {
+  @media (min-width: 1200px) {
+    width: 180px !important;
+    min-width: 180px !important;
+  }
+}
+
+// ========================================
+// メインエリアを広く
+// ========================================
+
+.center {
+  @media (min-width: 1200px) {
+    max-width: 900px !important;
+  }
+}
+
+// ========================================
+// ページタイトル（ロゴ）
+// ========================================
+
+.page-title {
+  font-weight: 800;
+  font-size: 1.3rem;
+  letter-spacing: -0.03em;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+// ========================================
+// 検索ボックス
+// ========================================
+
+#search-container {
+  background: var(--light);
+  border: 2px solid transparent;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  transition: var(--transition-normal);
+
+  &:hover, &:focus-within {
+    border-color: var(--tertiary);
+    box-shadow: var(--shadow-medium);
+  }
+
+  #search-icon {
+    color: var(--tertiary);
+  }
+
+  #search-bar {
+    background: transparent;
+    border: none;
+  }
+}
+
+// ========================================
+// エクスプローラー
+// ========================================
+
+.explorer {
+  background: var(--light);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  padding: 1rem;
+  margin-top: 1rem;
+  border: 1px solid var(--lightgray);
+
+  button.explorer-toggle {
+    font-weight: 700;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--gray);
+  }
+
+  #explorer-content li a {
+    padding: 0.4rem 0.6rem;
+    border-radius: var(--radius-sm);
+    transition: var(--transition-fast);
+
+    &:hover {
+      background: var(--lightgray);
+    }
+  }
+
+  .folder-title {
+    font-weight: 600;
+    color: var(--secondary);
+  }
+}
+
+// ========================================
+// ダークモードボタン
+// ========================================
+
+.darkmode svg {
+  transition: var(--transition-normal);
+
+  &:hover {
+    transform: rotate(15deg) scale(1.1);
+  }
+}
+
+// ========================================
+// トップページ - フルスクリーングラフ
+// ========================================
+
+body[data-slug="index"] {
+  // 左サイドバー非表示
+  .sidebar.left, .left-sidebar {
+    display: none !important;
+  }
+
+  // 右サイドバー非表示
+  .right-sidebar {
+    display: none !important;
+  }
+
+  // グリッドレイアウトを全幅に変更
+  #quartz-body {
+    display: block !important;
+    max-width: 100% !important;
+  }
+
+  // メインをフルワイドに
+  .center {
+    max-width: 100% !important;
+    width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+
+    // page-headerに大きめのグラフ
+    .page-header {
+      width: 100% !important;
+      height: 70vh !important;
+      min-height: 500px;
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+
+    // 記事コンテンツを表示
+    article {
+      display: block !important;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+  }
+
+  // グラフを大きく表示（未来感のあるデザイン）
+  .center .graph {
+    width: 100% !important;
+    height: 70vh !important;
+    min-height: 500px !important;
+    border-radius: 0 !important;
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(20, 30, 60, 1) 0%, transparent 60%),
+      radial-gradient(ellipse at 0% 100%, rgba(15, 25, 50, 1) 0%, transparent 50%),
+      radial-gradient(ellipse at 100% 100%, rgba(10, 20, 45, 1) 0%, transparent 50%),
+      linear-gradient(180deg, #0a0f1a 0%, #0d1525 50%, #0a0f1a 100%) !important;
+    border: none !important;
+    box-shadow: none !important;
+    position: relative;
+    overflow: hidden;
+
+    // サイバーグリッドパターン
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(59, 130, 246, 0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(59, 130, 246, 0.08) 1px, transparent 1px),
+        linear-gradient(rgba(59, 130, 246, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(59, 130, 246, 0.04) 1px, transparent 1px);
+      background-size: 80px 80px, 80px 80px, 16px 16px, 16px 16px;
+      pointer-events: none;
+      z-index: 1;
+      animation: gridPulse 8s ease-in-out infinite;
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 70%);
+      -webkit-mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 70%);
+    }
+
+    // グロー効果レイヤー
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 0% 100%, rgba(59, 130, 246, 0.4) 0%, transparent 35%),
+        radial-gradient(circle at 100% 0%, rgba(147, 51, 234, 0.35) 0%, transparent 35%),
+        radial-gradient(circle at 100% 100%, rgba(6, 182, 212, 0.3) 0%, transparent 30%),
+        radial-gradient(circle at 0% 0%, rgba(236, 72, 153, 0.2) 0%, transparent 30%),
+        radial-gradient(circle at 50% 50%, rgba(99, 102, 241, 0.15) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 1;
+      animation: glowShift 15s ease-in-out infinite alternate;
+    }
+
+    & > h3 {
+      display: none;
+    }
+
+    .graph-outer {
+      width: 100% !important;
+      height: 70vh !important;
+      min-height: 500px !important;
+    }
+
+    .graph-container {
+      width: 100% !important;
+      height: 70vh !important;
+      min-height: 500px !important;
+      position: relative;
+      z-index: 2;
+
+      canvas {
+        width: 100% !important;
+        height: 70vh !important;
+        min-height: 500px !important;
+      }
+    }
+  }
+
+  footer {
+    display: none;
+  }
+}
+
+// ========================================
+// 記事ページ - 上部スキルマップ
+// ========================================
+
+body:not([data-slug="index"]) {
+  // 左サイドバー非表示
+  .sidebar.left, .left-sidebar {
+    display: none !important;
+  }
+
+  // 右サイドバーを狭く
+  .right-sidebar {
+    @media (min-width: 1200px) {
+      width: 200px !important;
+      min-width: 200px !important;
+    }
+  }
+
+  // グリッドレイアウトを全幅に
+  #quartz-body {
+    display: block !important;
+    max-width: 100% !important;
+  }
+
+  // メインエリア - 強制的に縦並び
+  .center {
+    display: block !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+
+    // 全ての直接子要素を縦並びに
+    & > * {
+      display: block !important;
+      width: 100% !important;
+      float: none !important;
+    }
+
+    // page-headerにグラフと各種情報
+    .page-header {
+      display: block !important;
+      width: 100% !important;
+      min-height: auto !important;
+      height: auto !important;
+      padding: 0 !important;
+      margin: 0 !important;
+
+      // グラフ部分
+      .graph {
+        height: 40vh !important;
+        min-height: 300px !important;
+        width: 100% !important;
+      }
+
+      // パンくず - 横並びで中央揃え
+      nav.breadcrumb-container {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+        gap: 0.5rem;
+        max-width: 900px;
+        width: 100%;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        padding: 1rem 2rem 0.5rem;
+        box-sizing: border-box;
+
+        .breadcrumb-element {
+          display: inline-flex !important;
+          align-items: center;
+          gap: 0.5rem;
+        }
+      }
+
+      // タイトルを中央揃え
+      h1 {
+        display: block !important;
+        max-width: 900px;
+        width: 100%;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        padding: 0.5rem 2rem;
+        box-sizing: border-box;
+        text-align: center;
+      }
+
+      .content-meta {
+        display: block !important;
+        max-width: 900px;
+        width: 100%;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        padding: 0.5rem 2rem;
+        box-sizing: border-box;
+        text-align: center;
+      }
+
+      ul.tags {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+        gap: 0.5rem;
+        max-width: 900px;
+        width: 100%;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        padding: 0.5rem 2rem 1rem;
+        box-sizing: border-box;
+      }
+    }
+
+    // 記事コンテンツ
+    article {
+      display: block !important;
+      max-width: 900px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 2rem;
+      float: none !important;
+    }
+
+    // ページリスト（フォルダ内のページ一覧）
+    .page-listing {
+      display: block !important;
+      max-width: 900px !important;
+      width: 100% !important;
+      margin: 0 auto !important;
+      padding: 0 2rem 2rem !important;
+      box-sizing: border-box !important;
+    }
+  }
+
+  // .center内のgridレイアウトを無効化
+  .center.popover-hint {
+    display: block !important;
+    grid-template-columns: none !important;
+  }
+
+  // popover-hint内のページリスト
+  .popover-hint .page-listing {
+    display: block !important;
+    max-width: 900px !important;
+    width: 100% !important;
+    margin: 0 auto !important;
+    padding: 0 2rem 2rem !important;
+    box-sizing: border-box !important;
+  }
+
+  // バックリンクセクションを中央揃え
+  .right-sidebar,
+  .sidebar.right {
+    display: block !important;
+    width: 100% !important;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem;
+    box-sizing: border-box;
+
+    .backlinks {
+      width: 100%;
+    }
+  }
+
+  // グラフスタイル（未来感のあるデザイン）
+  .center .graph {
+    width: 100% !important;
+    height: 40vh !important;
+    min-height: 300px !important;
+    border-radius: 0 !important;
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(20, 30, 60, 1) 0%, transparent 60%),
+      radial-gradient(ellipse at 0% 100%, rgba(15, 25, 50, 1) 0%, transparent 50%),
+      radial-gradient(ellipse at 100% 100%, rgba(10, 20, 45, 1) 0%, transparent 50%),
+      linear-gradient(180deg, #0a0f1a 0%, #0d1525 50%, #0a0f1a 100%) !important;
+    border: none !important;
+    box-shadow: none !important;
+    position: relative;
+    overflow: hidden;
+
+    // サイバーグリッドパターン
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(59, 130, 246, 0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(59, 130, 246, 0.08) 1px, transparent 1px),
+        linear-gradient(rgba(59, 130, 246, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(59, 130, 246, 0.04) 1px, transparent 1px);
+      background-size: 80px 80px, 80px 80px, 16px 16px, 16px 16px;
+      pointer-events: none;
+      z-index: 1;
+      animation: gridPulse 8s ease-in-out infinite;
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 70%);
+      -webkit-mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 70%);
+    }
+
+    // グロー効果レイヤー
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 0% 100%, rgba(59, 130, 246, 0.4) 0%, transparent 35%),
+        radial-gradient(circle at 100% 0%, rgba(147, 51, 234, 0.35) 0%, transparent 35%),
+        radial-gradient(circle at 100% 100%, rgba(6, 182, 212, 0.3) 0%, transparent 30%),
+        radial-gradient(circle at 0% 0%, rgba(236, 72, 153, 0.2) 0%, transparent 30%),
+        radial-gradient(circle at 50% 50%, rgba(99, 102, 241, 0.15) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 1;
+      animation: glowShift 15s ease-in-out infinite alternate;
+    }
+
+    & > h3 {
+      display: none;
+    }
+
+    .graph-outer {
+      width: 100% !important;
+      height: 40vh !important;
+      min-height: 300px !important;
+    }
+
+    .graph-container {
+      width: 100% !important;
+      height: 40vh !important;
+      min-height: 300px !important;
+      position: relative;
+      z-index: 2;
+
+      canvas {
+        width: 100% !important;
+        height: 40vh !important;
+        min-height: 300px !important;
+      }
+    }
+  }
+}
+
+// ========================================
+// マップリセットボタン
+// ========================================
+
+.graph-reset-btn {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  z-index: 100;
+  background: rgba(59, 130, 246, 0.9);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 0.6rem 1rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+
+  &:hover {
+    background: rgba(59, 130, 246, 1);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+  }
+
+  svg {
+    margin-right: 0.4rem;
+    vertical-align: middle;
+  }
+}
+
+// 記事内のマップに戻るボタン
+.back-to-map-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--secondary);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  text-decoration: none;
+  margin: 1rem 0;
+
+  &:hover {
+    background: var(--tertiary);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-medium);
+  }
+}
+
+// ========================================
+// 通常ページのグラフ
+// ========================================
+
+.graph {
+  background: var(--light);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  border: 1px solid var(--lightgray);
+  overflow: hidden;
+
+  & > h3 {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--gray);
+    padding: 0.8rem 1rem;
+    border-bottom: 1px solid var(--lightgray);
+    margin: 0;
+  }
+
+  #graph-container {
+    min-height: 280px;
+  }
+}
+
+// ========================================
+// 記事スタイル
+// ========================================
+
+article {
+  h1, h2, h3 {
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  h1 {
+    font-size: 2.2rem;
+  }
+
+  h2 {
+    font-size: 1.6rem;
+    margin-top: 2.5rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 2px solid var(--lightgray);
+  }
+
+  h3 {
+    font-size: 1.2rem;
+    color: var(--secondary);
+  }
+
+  p {
+    line-height: 1.8;
+  }
+}
+
+// ========================================
+// リンク
+// ========================================
+
+a.internal {
+  color: var(--tertiary);
+  font-weight: 500;
+  transition: var(--transition-fast);
+  border-bottom: 1px solid transparent;
+
+  &:hover {
+    border-bottom-color: var(--tertiary);
+  }
+}
+
+// ========================================
+// テーブル
+// ========================================
+
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-soft);
+
+  th {
+    background: var(--secondary);
+    color: white;
+    font-weight: 600;
+    font-size: 0.85rem;
+    padding: 0.8rem 1rem;
+    text-align: left;
+  }
+
+  td {
+    padding: 0.8rem 1rem;
+    border-bottom: 1px solid var(--lightgray);
+    background: var(--light);
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+
+  tr:hover td {
+    background: var(--lightgray);
+  }
+}
+
+// ========================================
+// タグ
+// ========================================
+
+.tag-link {
+  display: inline-flex;
+  background: var(--lightgray);
+  color: var(--secondary) !important;
+  border-radius: 100px;
+  padding: 0.2rem 0.6rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  transition: var(--transition-fast);
+
+  &:hover {
+    background: var(--secondary);
+    color: white !important;
+  }
+
+  &::before {
+    content: "#";
+    opacity: 0.5;
+    margin-right: 0.1rem;
+  }
+}
+
+// ========================================
+// コールアウト
+// ========================================
+
+.callout {
+  border-radius: var(--radius-md);
+  border: none !important;
+  box-shadow: none;
+  margin: 1.5rem 0;
+  background: var(--light) !important;
+  border-left: none !important;
+
+  .callout-content {
+    color: var(--darkgray);
+  }
+}
+
+// ========================================
+// ソースコンテンツページ
+// ========================================
+
+.source-thumbnail {
+  display: block;
+  position: relative;
+  max-width: 100%;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-soft);
+  margin: 1.5rem 0;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+
+    .play-overlay {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1.1);
+    }
+  }
+
+  img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .play-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80px;
+    height: 80px;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: white;
+    opacity: 0.9;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+}
+
+.source-badge {
+  display: inline-block;
+  background: var(--lightgray);
+  color: var(--darkgray);
+  padding: 0.4rem 0.8rem;
+  border-radius: var(--radius-md);
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
+}
+
+.source-link-btn {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--secondary) 0%, color-mix(in srgb, var(--secondary) 80%, black) 100%);
+  color: white !important;
+  padding: 0.8rem 1.5rem;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  text-decoration: none !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  }
+}
+
+// ========================================
+// ページリスト（グローバル）
+// ========================================
+
+.page-listing {
+  max-width: 900px !important;
+  margin: 0 auto !important;
+  padding: 0 2rem 1rem !important;
+  box-sizing: border-box !important;
+}
+
+// ========================================
+// バックリンク（コンテンツ下に中央寄せ）
+// ========================================
+
+.backlinks {
+  background: var(--light);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  padding: 1rem;
+  border: 1px solid var(--lightgray);
+  max-width: 900px;
+  margin: 0 auto 1rem;
+
+  & > h3 {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--gray);
+    margin-bottom: 0.5rem;
+  }
+}
+
+// afterBodyコンテナ
+#quartz-body > .after-body {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+// ========================================
+// スクロールバー
+// ========================================
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--lightgray);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--gray);
+  border-radius: 100px;
+
+  &:hover {
+    background: var(--darkgray);
+  }
+}
+
+// ========================================
+// モバイル対応
+// ========================================
+
+@media (max-width: 768px) {
+  body[data-slug="index"] {
+    .center .graph {
+      height: 80vh !important;
+      min-height: 400px;
+    }
+
+    .left-sidebar {
+      transform: none;
+      position: relative;
+
+      &::after {
+        display: none;
+      }
+    }
+  }
+}
+
+// ========================================
+// 未来感アニメーション
+// ========================================
+
+@keyframes gridPulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+@keyframes glowShift {
+  0% {
+    filter: blur(40px);
+    opacity: 0.8;
+  }
+  50% {
+    filter: blur(60px);
+    opacity: 1;
+  }
+  100% {
+    filter: blur(50px);
+    opacity: 0.9;
+  }
+}
+
+@keyframes scanLine {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(100vh);
+  }
+}
+
+// ========================================
+// ソースフィルター - フローティングボタン
+// ========================================
+
+// 全ページでソースフィルターをフローティング表示
+.source-filter-container {
+  position: fixed !important;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1000;
+
+  // パネルの位置調整
+  .source-filter-panel {
+    position: fixed;
+    top: 4rem;
+    right: 1rem;
+    max-height: 80vh;
+  }
+}
