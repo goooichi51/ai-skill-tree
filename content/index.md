@@ -21,13 +21,13 @@ tags:
 
 AIの使い方で難しいのは、文章生成から画像生成、プログラミングまで活用範囲が広く、人によって必要な知識が違うこと。なので、自分に必要な情報を数珠つなぎでインプットできるようにスキルツリー形式にしてみました。
 
-## コンテンツ
+## カテゴリ
 
-### [[skill-tree/index|AIスキルツリー]]
-ChatGPT、Claude、画像生成AIなど、カテゴリ別に整理しています。
-
-### AI活用事例集（工事中）
-実際のユースケースを紹介しています。
+- [[skill-tree/chat-ai/index|対話型AI]]
+- [[skill-tree/generative-ai/index|生成AI]]
+- [[skill-tree/automation/index|自動化]]
+- [[skill-tree/development/index|開発・コーディング]]
+- [[skill-tree/frontier/index|先端技術]]
 
 ## グラフの見方
 

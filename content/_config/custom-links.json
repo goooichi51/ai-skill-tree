@@ -1,4 +1,9 @@
 {
-  "links": [],
+  "links": [
+    {
+      "source": "skill-tree/chat-ai/prompt-engineering",
+      "target": "skill-tree/chat-ai/プロンプトの基礎-aiがどれだけ進化しても役に立ち続ける考え方とテクニック"
+    }
+  ],
   "excludedLinks": []
 }

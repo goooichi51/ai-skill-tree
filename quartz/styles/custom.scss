@@ -4,16 +4,39 @@
 // AI Skill Tree Map - Modern Design
 // ========================================
 
+// ダークモード固定
+:root {
+  color-scheme: dark !important;
+}
+
+html {
+  // ダークモードのカラーを強制適用
+  --light: #0f172a !important;
+  --lightgray: #1e293b !important;
+  --gray: #64748b !important;
+  --darkgray: #e2e8f0 !important;
+  --dark: #f8fafc !important;
+  --secondary: #60a5fa !important;
+  --tertiary: #3b82f6 !important;
+  --highlight: rgba(96, 165, 250, 0.12) !important;
+  --textHighlight: #fef08a44 !important;
+}
+
 :root {
   --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   --gradient-dark: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-  --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.08);
-  --shadow-medium: 0 8px 30px rgba(0, 0, 0, 0.12);
+  --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.3);
+  --shadow-medium: 0 8px 30px rgba(0, 0, 0, 0.4);
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 20px;
   --transition-fast: 0.15s ease;
   --transition-normal: 0.25s ease;
+}
+
+// テーマ切り替えボタンを非表示
+.darkmode {
+  display: none !important;
 }
 
 // ========================================
