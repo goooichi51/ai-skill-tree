@@ -177,3 +177,55 @@ export async function parseYouTubeUrl(url: string, apiKey: string): Promise<Pars
 export function isYouTubeUrl(url: string): boolean {
   return /(?:youtube\.com|youtu\.be)/.test(url)
 }
+
+// 検索結果の型
+export interface YouTubeSearchResult {
+  videoId: string
+  title: string
+  channel: string
+  channelId: string
+  thumbnail: string
+  publishedAt: string
+  url: string
+}
+
+// YouTube検索
+export async function searchYouTubeVideos(
+  query: string,
+  apiKey: string,
+  maxResults: number = 10
+): Promise<YouTubeSearchResult[]> {
+  try {
+    const response = await youtube.search.list({
+      key: apiKey,
+      part: ["snippet"],
+      q: query,
+      type: ["video"],
+      maxResults: maxResults,
+      relevanceLanguage: "ja", // 日本語コンテンツ優先
+    })
+
+    const results: YouTubeSearchResult[] = []
+
+    for (const item of response.data.items || []) {
+      if (!item.id?.videoId || !item.snippet) continue
+
+      results.push({
+        videoId: item.id.videoId,
+        title: item.snippet.title || "無題",
+        channel: item.snippet.channelTitle || "不明",
+        channelId: item.snippet.channelId || "",
+        thumbnail: item.snippet.thumbnails?.medium?.url || item.snippet.thumbnails?.default?.url || "",
+        publishedAt: (item.snippet.publishedAt || "").split("T")[0],
+        url: `https://www.youtube.com/watch?v=${item.id.videoId}`,
+      })
+    }
+
+    return results
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(`YouTube検索エラー: ${error.message}`)
+    }
+    throw error
+  }
+}

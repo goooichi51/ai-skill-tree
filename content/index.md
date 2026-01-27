@@ -1,5 +1,6 @@
 ---
 title: AI Skill Tree Map
+description: ChatGPT、Claude、画像生成AI、自動化ツールなど、AIツールの使い方や実践テクニックをスキルツリー形式で学べるサイト。初心者から上級者まで、自分に必要な情報を効率的に見つけられます。
 tags:
   - home
 ---
@@ -42,6 +43,12 @@ AIの使い方で難しいのは、文章生成から画像生成、プログラ
 - **ドラッグ**: グラフ内を移動
 - **ズーム**: マウスホイールで拡大・縮小
 - **クリック**: ノードをクリックでページへ移動
+
+---
+
+## お問い合わせ
+
+ご質問・ご意見は hello@sepkyoto.com までお気軽にどうぞ。
 
 <a href="#" class="back-to-map-btn" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;">
   <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg>

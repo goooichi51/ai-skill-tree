@@ -92,6 +92,50 @@ type SourceConfig = {
   }
 }
 
+// カテゴリ設定の型定義
+type MainCategory = {
+  id: string
+  name: string
+  shape: "circle" | "square" | "diamond" | "hexagon" | "star"
+  color: { h: number; s: number; l: number }
+  tags: string[]
+}
+
+type CategoryConfig = {
+  mainCategories: MainCategory[]
+}
+
+// デフォルトのカテゴリ設定
+const defaultCategoryConfig: CategoryConfig = {
+  mainCategories: [
+    { id: "chat-ai", name: "対話型AI", shape: "circle", color: { h: 0, s: 70, l: 55 }, tags: ["対話型AI", "skill-tree"] },
+    { id: "generative-ai", name: "生成AI", shape: "square", color: { h: 270, s: 60, l: 55 }, tags: ["生成AI", "skill-tree"] },
+    { id: "automation", name: "自動化", shape: "diamond", color: { h: 30, s: 80, l: 55 }, tags: ["自動化", "skill-tree"] },
+    { id: "development", name: "開発", shape: "hexagon", color: { h: 150, s: 60, l: 45 }, tags: ["開発", "skill-tree"] },
+    { id: "frontier", name: "先端技術", shape: "star", color: { h: 210, s: 70, l: 50 }, tags: ["先端技術", "skill-tree"] },
+  ],
+}
+
+// カテゴリ設定をキャッシュ
+let categoryConfigCache: CategoryConfig | null = null
+
+// カテゴリ設定を取得
+async function getCategoryConfig(): Promise<CategoryConfig> {
+  if (categoryConfigCache) return categoryConfigCache
+
+  try {
+    const response = await fetch("/static/categories.json")
+    if (response.ok) {
+      categoryConfigCache = await response.json() as CategoryConfig
+      return categoryConfigCache
+    }
+  } catch (e) {
+    console.warn("Failed to load categories.json:", e)
+  }
+  categoryConfigCache = defaultCategoryConfig
+  return categoryConfigCache
+}
+
 // ソース設定のlocalStorageキー
 const sourceSettingsKey = "source-settings"
 
@@ -249,6 +293,9 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
     console.warn("Failed to load custom links:", e)
   }
 
+  // カテゴリ設定を読み込む
+  const categoryConfig = await getCategoryConfig()
+
   const links: SimpleLinkData[] = []
   const tags: SimpleSlug[] = []
   const validLinks = new Set(data.keys())
@@ -276,108 +323,9 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
     }
   }
 
-  // ====== タグベース・ソースベースの自動接続 ======
-  // 各ノードからの自動接続数を最大4つに制限
-  const MAX_AUTO_LINKS_PER_NODE = 4
-  const autoLinkCount = new Map<SimpleSlug, number>() // ノードごとの自動接続数
-
-  // 主要タグのみで接続（共通タグは除外）
-  const connectingTags = [
-    // ツール別
-    "ChatGPT", "Claude", "Gemini", "Copilot", "Midjourney", "DALL-E", "Stable-Diffusion",
-    // カテゴリ別
-    "対話型AI", "画像生成", "動画生成", "音声生成", "自動化", "開発支援",
-    // レベル別
-    "Lv1-入門", "Lv2-実践", "Lv3-応用"
-  ]
-  const excludeTags = ["skill-tree", "use-case"]
-
-  // タグ→ノードのマップを作成
-  const tagToNodes = new Map<string, SimpleSlug[]>()
-  for (const [slug, details] of data.entries()) {
-    if (slug.startsWith("tags/")) continue // タグノードは除外
-    for (const tag of details.tags ?? []) {
-      if (excludeTags.includes(tag)) continue
-      if (!connectingTags.includes(tag)) continue
-      if (!tagToNodes.has(tag)) tagToNodes.set(tag, [])
-      tagToNodes.get(tag)!.push(slug)
-    }
-  }
-
-  // 同じタグを持つノード同士を接続（最大制限あり）
-  const addedLinks = new Set<string>() // 重複防止
-  for (const [, nodes] of tagToNodes.entries()) {
-    for (let i = 0; i < nodes.length; i++) {
-      for (let j = i + 1; j < nodes.length; j++) {
-        const nodeA = nodes[i]
-        const nodeB = nodes[j]
-        const countA = autoLinkCount.get(nodeA) ?? 0
-        const countB = autoLinkCount.get(nodeB) ?? 0
-
-        // 両方のノードがまだ接続上限に達していない場合のみ接続
-        if (countA >= MAX_AUTO_LINKS_PER_NODE || countB >= MAX_AUTO_LINKS_PER_NODE) continue
-
-        const linkKey = [nodeA, nodeB].sort().join(":")
-        if (!addedLinks.has(linkKey)) {
-          links.push({ source: nodeA, target: nodeB })
-          addedLinks.add(linkKey)
-          autoLinkCount.set(nodeA, countA + 1)
-          autoLinkCount.set(nodeB, countB + 1)
-        }
-      }
-    }
-  }
-
-  // ====== ソースベースの自動接続 ======
-  // 同じチャンネル/著者からのコンテンツを接続
-  const sourceToNodes = new Map<string, SimpleSlug[]>()
-  for (const [slug, details] of data.entries()) {
-    if (slug.startsWith("tags/")) continue
-    const source = details.source
-    if (!source) continue
-
-    // ソースキーを生成（type + id）
-    let sourceKey = ""
-    if (source.type === "youtube" && source.channelId) {
-      sourceKey = `youtube:${source.channelId}`
-    } else if (source.type === "note" && source.authorId) {
-      sourceKey = `note:${source.authorId}`
-    } else if (source.type === "x" && source.authorId) {
-      sourceKey = `x:${source.authorId}`
-    } else if (source.type === "blog" && source.domain) {
-      sourceKey = `blog:${source.domain}`
-    }
-
-    if (sourceKey) {
-      if (!sourceToNodes.has(sourceKey)) sourceToNodes.set(sourceKey, [])
-      sourceToNodes.get(sourceKey)!.push(slug)
-    }
-  }
-
-  // 同じソースのノード同士を接続（最大制限あり）
-  for (const [, nodes] of sourceToNodes.entries()) {
-    for (let i = 0; i < nodes.length; i++) {
-      for (let j = i + 1; j < nodes.length; j++) {
-        const nodeA = nodes[i]
-        const nodeB = nodes[j]
-        const countA = autoLinkCount.get(nodeA) ?? 0
-        const countB = autoLinkCount.get(nodeB) ?? 0
-
-        // 両方のノードがまだ接続上限に達していない場合のみ接続
-        if (countA >= MAX_AUTO_LINKS_PER_NODE || countB >= MAX_AUTO_LINKS_PER_NODE) continue
-
-        const linkKey = [nodeA, nodeB].sort().join(":")
-        if (!addedLinks.has(linkKey)) {
-          links.push({ source: nodeA, target: nodeB })
-          addedLinks.add(linkKey)
-          autoLinkCount.set(nodeA, countA + 1)
-          autoLinkCount.set(nodeB, countB + 1)
-        }
-      }
-    }
-  }
-
   // ====== カスタムリンクの処理 ======
+  // 重複防止用Set
+  const addedLinks = new Set<string>()
   // 除外リンクのSetを作成
   const excludedLinkKeys = new Set<string>()
   for (const link of customLinksConfig.excludedLinks) {
@@ -431,12 +379,16 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
   }
 
   const nodes = [...neighbourhood].map((url) => {
-    const text = url.startsWith("tags/") ? "#" + url.substring(5) : (data.get(url)?.title ?? url)
+    const nodeData = data.get(url)
+    // displayTitleがあれば優先、なければtitle、どちらもなければurl
+    const text = url.startsWith("tags/")
+      ? "#" + url.substring(5)
+      : (nodeData?.displayTitle || nodeData?.title || url)
     return {
       id: url,
       text,
-      tags: data.get(url)?.tags ?? [],
-      source: data.get(url)?.source,
+      tags: nodeData?.tags ?? [],
+      source: nodeData?.source,
     }
   })
   const graphData: { nodes: NodeData[]; links: LinkData[] } = {
@@ -455,23 +407,39 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
   // カテゴリに基づいてノードを分類（クラスタリング用）
   function getNodeCategory(d: NodeData): string {
     const tags = d.tags || []
-    if (tags.includes("対話型AI") || d.id.includes("chat-ai")) return "chat-ai"
-    if (tags.includes("生成AI") || d.id.includes("generative-ai")) return "generative-ai"
-    if (tags.includes("自動化") || d.id.includes("automation")) return "automation"
-    if (tags.includes("開発") || d.id.includes("development")) return "development"
-    if (tags.includes("先端技術") || d.id.includes("frontier")) return "frontier"
+
+    // 1. パスでマッチ（最も信頼性が高い）
+    for (const cat of categoryConfig.mainCategories) {
+      if (d.id.includes(`/${cat.id}/`) || d.id.includes(`/${cat.id}`)) {
+        return cat.id
+      }
+    }
+
+    // 2. カテゴリ固有のタグでマッチ（"skill-tree"を除外）
+    for (const cat of categoryConfig.mainCategories) {
+      const specificTags = cat.tags.filter(tag => tag !== "skill-tree")
+      if (specificTags.some((tag) => tags.includes(tag))) {
+        return cat.id
+      }
+    }
+
     return "other"
   }
 
   // カテゴリごとのクラスタ中心点（円形に配置）
-  const categoryPositions: Record<string, { x: number; y: number }> = {
-    "chat-ai": { x: 0, y: -100 },           // 上
-    "generative-ai": { x: 95, y: -31 },     // 右上
-    "automation": { x: 59, y: 81 },         // 右下
-    "development": { x: -59, y: 81 },       // 左下
-    "frontier": { x: -95, y: -31 },         // 左上
-    "other": { x: 0, y: 0 },                // 中心
-  }
+  const categoryPositions: Record<string, { x: number; y: number }> = (() => {
+    const positions: Record<string, { x: number; y: number }> = { other: { x: 0, y: 0 } }
+    const count = categoryConfig.mainCategories.length
+    const radius = 100
+    categoryConfig.mainCategories.forEach((cat, i) => {
+      const angle = (2 * Math.PI * i) / count - Math.PI / 2 // 上から開始
+      positions[cat.id] = {
+        x: Math.round(Math.cos(angle) * radius),
+        y: Math.round(Math.sin(angle) * radius),
+      }
+    })
+    return positions
+  })()
 
   // カテゴリクラスタリング力
   function forceCluster(strength: number = 0.1) {
@@ -562,6 +530,89 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
     return null
   }
 
+  // カテゴリ別の基本色（HSL形式）- 設定ファイルから動的に生成
+  const categoryColors: Record<string, { h: number; s: number; l: number }> = (() => {
+    const colors: Record<string, { h: number; s: number; l: number }> = {}
+    for (const cat of categoryConfig.mainCategories) {
+      colors[cat.id] = cat.color
+    }
+    return colors
+  })()
+
+  // 中カテゴリを特定（大カテゴリのindex.mdからリンクされているノード）
+  const subCategories = new Set<string>()
+  for (const [source, details] of data.entries()) {
+    // 大カテゴリのindexページからのリンク先を中カテゴリとして登録
+    if (source.match(/^skill-tree\/[^/]+$/) || source.endsWith("/index")) {
+      for (const target of details.links ?? []) {
+        if (!target.endsWith("/index") && !target.startsWith("tags/")) {
+          subCategories.add(target)
+        }
+      }
+    }
+  }
+
+  // コンテンツノード → 親の中カテゴリ のマップを作成
+  const parentSubCategoryMap = new Map<string, string>()
+  for (const link of customLinksConfig.links) {
+    const sourceSlug = simplifySlug(link.source as FullSlug)
+    const targetSlug = simplifySlug(link.target as FullSlug)
+    // リンク元が中カテゴリの場合、リンク先の親として登録
+    if (subCategories.has(sourceSlug)) {
+      parentSubCategoryMap.set(targetSlug, sourceSlug)
+    }
+  }
+
+  // カテゴリ内の中カテゴリの順序を取得
+  function getSubCategoryIndex(nodeId: string, category: string): number {
+    // 大カテゴリ（indexページ）は0
+    if (nodeId.endsWith("/index") || nodeId === `skill-tree/${category}`) {
+      return 0
+    }
+
+    // ノードIDからファイル名部分を取得してハッシュ化
+    const parts = nodeId.split("/")
+    const filename = parts[parts.length - 1]
+    let hash = 0
+    for (let i = 0; i < filename.length; i++) {
+      hash = ((hash << 5) - hash) + filename.charCodeAt(i)
+      hash = hash & hash // 32bit integer
+    }
+    return Math.abs(hash) % 5 + 1 // 1-5の範囲
+  }
+
+  // カテゴリに基づいて色を決定
+  function getCategoryColor(d: NodeData): string | null {
+    const category = getNodeCategory(d)
+    if (category === "other") return null
+
+    const baseColor = categoryColors[category]
+    if (!baseColor) return null
+
+    // 大カテゴリかどうかを判定
+    const isMainCategory = d.id.endsWith("/index") ||
+      d.id === `skill-tree/${category}` ||
+      d.id === `skill-tree/${category}/index`
+
+    // 明度を調整
+    let adjustedL: number
+    if (isMainCategory) {
+      // 大カテゴリはベース色
+      adjustedL = baseColor.l
+    } else {
+      // 親の中カテゴリがある場合は、その色を使用
+      const parentSubCategory = parentSubCategoryMap.get(d.id)
+      const colorSourceId = parentSubCategory || d.id
+
+      // 中カテゴリは順番で明度を変化（±10%の範囲）
+      const subIndex = getSubCategoryIndex(colorSourceId, category)
+      const lightnessOffset = (subIndex % 5 - 2) * 5 // -10, -5, 0, +5, +10
+      adjustedL = Math.max(35, Math.min(70, baseColor.l + lightnessOffset))
+    }
+
+    return `hsl(${baseColor.h}, ${baseColor.s}%, ${adjustedL}%)`
+  }
+
   // ソース設定を取得
   const sourceSettings = await getSourceSettings()
 
@@ -602,23 +653,18 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
   }
 
   // calculate color
-  // 優先順位: 1.現在のページ → 2.ソース色（enabled時）→ 3.中テーマ色 → 4.訪問済み → 5.デフォルト
+  // 優先順位: 1.現在のページ → 2.カテゴリ色 → 3.訪問済み → 4.デフォルト
+  // ※ソース色（YouTube/Note.com）は廃止し、カテゴリ色を優先
   const color = (d: NodeData) => {
     const isCurrent = d.id === slug
     if (isCurrent) {
       return computedStyleMap["--secondary"]
     }
 
-    // ソース（YouTube/Note.com）の色があればそれを使用
-    const sourceColor = getNodeSourceColor(d)
-    if (sourceColor) {
-      return sourceColor
-    }
-
-    // 中テーマの色があればそれを使用
-    const midThemeColor = getNodeMidThemeColor(d)
-    if (midThemeColor) {
-      return midThemeColor
+    // カテゴリに基づく色を使用（大カテゴリに近い色）
+    const catColor = getCategoryColor(d)
+    if (catColor) {
+      return catColor
     }
 
     // タグノードや訪問済みは従来通り
@@ -636,23 +682,19 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
     return 2 + Math.sqrt(numLinks)
   }
 
-  // カテゴリに基づいて形状を決定
+  // カテゴリに基づいて形状を決定 - 設定ファイルから動的に判定
   type NodeShape = "circle" | "square" | "diamond" | "hexagon" | "star" | "home"
   function getNodeShape(d: NodeData): NodeShape {
     // ホームページは家アイコン
     if (d.id === "index") return "home"
-    const tags = d.tags || []
-    if (tags.includes("対話型AI")) return "circle"
-    if (tags.includes("生成AI")) return "square"
-    if (tags.includes("自動化")) return "diamond"
-    if (tags.includes("開発")) return "hexagon"
-    if (tags.includes("先端技術")) return "star"
-    // カテゴリindexページの判定（パスから）
-    if (d.id.includes("chat-ai")) return "circle"
-    if (d.id.includes("generative-ai")) return "square"
-    if (d.id.includes("automation")) return "diamond"
-    if (d.id.includes("development")) return "hexagon"
-    if (d.id.includes("frontier")) return "star"
+
+    // getNodeCategoryと同じロジックでカテゴリを判定
+    const category = getNodeCategory(d)
+    if (category !== "other") {
+      const cat = categoryConfig.mainCategories.find(c => c.id === category)
+      if (cat) return cat.shape
+    }
+
     return "circle" // デフォルト
   }
 

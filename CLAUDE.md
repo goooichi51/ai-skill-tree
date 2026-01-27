@@ -1,13 +1,13 @@
 # AI Skill Tree Map プロジェクト
 
 ## ビジョン
-ビジネスパーソンがAIスキルを体系的に学べるインタラクティブなスキルマップ
+AIツールの使い方や実践テクニックを集めた個人的な情報収集サイト
 
 ---
 
-## コンテンツ種別
+## コンテンツ構成
 
-### 1. スキルツリー記事 (`content/skill-tree/`)
+### スキルツリー記事 (`content/skill-tree/`)
 - **対象**: 個別のAIツール・技術・概念
 - **カテゴリ**:
   - `chat-ai/`: 対話型AI（ChatGPT, Claude等）
@@ -16,57 +16,47 @@
   - `development/`: 開発支援（Cursor, Copilot等）
   - `frontier/`: 先端技術（AIエージェント等）
 
-### 2. 活用事例 (`content/use-cases/`)
-- **対象**: 実際のビジネス課題とAI解決策
-- **形式**: 課題 → 解決策 → 効果
-
 ---
 
 ## コンテンツソース
 
 | ソース | 説明 | 追加方法 |
 |--------|------|----------|
-| YouTube | AIチュートリアル動画 | CLI: `--url "https://youtube.com/..."` |
-| Note.com | AI解説記事 | CLI: `--url "https://note.com/..."` |
+| YouTube | AIチュートリアル動画 | 管理ツールでURL貼り付け |
+| Note.com | AI解説記事 | 管理ツールでURL貼り付け |
+| X（Twitter） | AI関連ポスト | 管理ツールでURL貼り付け |
+| ブログ | 技術ブログ記事 | 管理ツールでURL貼り付け |
 | 手動 | オリジナル解説 | 直接マークダウン作成 |
-
-### CLI使用例
-```bash
-# YouTube動画を追加
-npx tsx scripts/add-source.ts --url "https://www.youtube.com/watch?v=xxxxx" --category "chat-ai"
-
-# Note.com記事を追加
-npx tsx scripts/add-source.ts --url "https://note.com/user/n/xxxxx" --category "automation"
-```
-
----
-
-## 品質基準
-
-- 実用的で具体的な内容
-- 初心者にも分かりやすい説明
-- 最新情報の維持
 
 ---
 
 ## マップ表示
 
-### ノードの区分け
-- **大項目（カテゴリ）**: 形で区別
-- **中項目（ソース）**: 色で区別（YouTube/Note.comのチャンネル・著者ごと）
+### ノードの形
+カテゴリごとに形状が決まっています：
+- **●（丸）**: 対話型AI
+- **■（四角）**: 生成AI
+- **◆（ひし形）**: 自動化
+- **⬡（六角形）**: 開発・コーディング
+- **★（星）**: 先端技術
 
-### スキルレベル（タグのみ）
-マップ上では表示せず、タグで分類：
-- `Lv1-入門`: AIを使い始める方向け
-- `Lv2-実践`: AIを業務で活用したい方向け
-- `Lv3-応用`: AIを自在に使いこなしたい方向け
+### ノードの色
+カテゴリごとに色系統が決まっています：
+- **赤系**: 対話型AI
+- **紫系**: 生成AI
+- **オレンジ系**: 自動化
+- **緑系**: 開発・コーディング
+- **青系**: 先端技術
+
+同じカテゴリ内の中カテゴリは明度の違いで区別されます。
+リンクで繋がれたコンテンツノード（YouTube等）は親の中カテゴリと同じ色になります。
 
 ---
 
 ## 技術スタック
 
 - **フレームワーク**: Quartz 4（静的サイトジェネレーター）
-- **グラフ可視化**: D3.js
+- **グラフ可視化**: D3.js + Pixi.js
 - **デプロイ**: GitHub Pages
 - **コンテンツ管理**: Markdown + フロントマター
 
@@ -81,6 +71,25 @@ npx quartz build --serve
 # 本番ビルド
 npx quartz build
 
-# コンテンツ追加（YouTube/Note.com）
-npx tsx scripts/add-source.ts --url "..." --category "..."
+# 管理ツール起動
+npx tsx scripts/admin-server.ts
 ```
+
+---
+
+## 管理ツール
+
+http://localhost:3456 で以下の操作が可能：
+- URLからコンテンツを追加（YouTube/Note.com/X/ブログ）
+- ノード間のカスタムリンクを追加・削除
+- 既存リンクの除外
+- サイトの公開（git commit & push）
+
+---
+
+## 設定ファイル
+
+| ファイル | 説明 |
+|---------|------|
+| `content/_config/custom-links.json` | カスタムリンク設定（追加リンク・除外リンク） |
+| `content/_config/sources.json` | ソース設定（YouTube/Note.com等のチャンネル・著者情報） |

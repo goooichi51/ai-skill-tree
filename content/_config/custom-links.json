@@ -3,6 +3,42 @@
     {
       "source": "skill-tree/chat-ai/prompt-engineering",
       "target": "skill-tree/chat-ai/プロンプトの基礎-aiがどれだけ進化しても役に立ち続ける考え方とテクニック"
+    },
+    {
+      "source": "skill-tree/chat-ai/chatgpt-basics",
+      "target": "skill-tree/chat-ai/これ1本でわかるchatgptの便利機能まとめ30種の使い方を網羅し脱初心者へ"
+    },
+    {
+      "source": "skill-tree/chat-ai/perplexity",
+      "target": "skill-tree/chat-ai/chatgptよりも何が良いのかperplexity-aiを徹底解説してみた"
+    },
+    {
+      "source": "skill-tree/chat-ai/perplexity",
+      "target": "skill-tree/chat-ai/必見perplexity最強のai検索術情報収集やコンテンツ作成の常識が変わる世界中で使われるアンサーエンジンperplexityの使い方-決定版"
+    },
+    {
+      "source": "skill-tree/chat-ai/gemini-basics",
+      "target": "skill-tree/chat-ai/無料版・有料版-あなたに最適なgeminiプランを徹底解説個人向け・企業ビジネス向けの最適プランをご紹介-入力したデータって学習される-google-workspaceグーグル"
+    },
+    {
+      "source": "skill-tree/chat-ai/gemini-basics",
+      "target": "skill-tree/chat-ai/生成ai超初心者okgeminiをもっと使いこなすための使い方・基礎をわかりやすく解説完全マスター"
+    },
+    {
+      "source": "skill-tree/automation/n8n",
+      "target": "skill-tree/automation/aiあらゆるサービスを繋げて自動化できる神ツールn8n完全入門プログラミング不要"
+    },
+    {
+      "source": "skill-tree/automation/n8n",
+      "target": "skill-tree/automation/2026年最新版n8nver20の完全マニュアルご紹介初学者向けaiワークフローaiエージェント"
+    },
+    {
+      "source": "skill-tree/automation/n8n",
+      "target": "skill-tree/automation/何から勉強するn8n初心者さんが学ぶべき17機能覚えるだけでai自動化が可能な無料テンプレートあり初心者さん必見aiワークフローn8naiエージェント"
+    },
+    {
+      "source": "skill-tree/automation/n8n",
+      "target": "skill-tree/automation/1本で全て分かる初心者でも簡単に自動化究極のaiエージェントn8nの使い方・入門講座活用事例chatgptgoogleslack連携"
     }
   ],
   "excludedLinks": []

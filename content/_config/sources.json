@@ -1,14 +1,44 @@
 {
   "youtube": {
     "channels": {
-      "UCvM5YYWwfLwpcQgbRr68JLQ": {
-        "name": "Adrian Twarog",
-        "color": "#ff6b6b",
-        "enabled": false
-      },
       "UC9AuyS7U4PxeDSNMJ2srarA": {
         "name": "AIでサボろうチャンネル",
         "color": "#45b7d1",
+        "enabled": false
+      },
+      "UCfapRkagDtoQEkGeyD3uERQ": {
+        "name": "KEITO【AI&WEB ch】",
+        "color": "#ff6b6b",
+        "enabled": false
+      },
+      "UCZQVTC3uLCyuJUOcRlguazA": {
+        "name": "にゃんたのAIチャンネル",
+        "color": "#96ceb4",
+        "enabled": false
+      },
+      "UCpUQnk6MaY4o3NdgJmv10cw": {
+        "name": "いけともch",
+        "color": "#ffeaa7",
+        "enabled": false
+      },
+      "UChD63R31attT5w8WOZeuXyg": {
+        "name": "NI-WORK",
+        "color": "#dfe6e9",
+        "enabled": false
+      },
+      "UC8FwuifT73FtnO93ZUNSoLg": {
+        "name": "ダイさん・AI活用の専門家",
+        "color": "#ff9ff3",
+        "enabled": false
+      },
+      "UCAmdG83hIqRQfwLaNQS7H2w": {
+        "name": "AIワークフロー解説のトモ",
+        "color": "#54a0ff",
+        "enabled": false
+      },
+      "UCgwv7JsLDvGTtRdFI4TVRQw": {
+        "name": "ハム先生のAI教室【最新AIツールの活用事例】",
+        "color": "#5f27cd",
         "enabled": false
       }
     }

@@ -29,6 +29,7 @@ export type ContentDetails = {
   slug: FullSlug
   filePath: FilePath
   title: string
+  displayTitle?: string
   links: SimpleSlug[]
   tags: string[]
   content: string
@@ -124,6 +125,7 @@ export const ContentIndex: QuartzEmitterPlugin<Partial<Options>> = (opts) => {
             slug,
             filePath: file.data.relativePath!,
             title: file.data.frontmatter?.title!,
+            displayTitle: file.data.frontmatter?.displayTitle as string | undefined,
             links: file.data.links ?? [],
             tags: file.data.frontmatter?.tags ?? [],
             content: file.data.text ?? "",
@@ -189,6 +191,24 @@ export const ContentIndex: QuartzEmitterPlugin<Partial<Options>> = (opts) => {
         ctx,
         content: JSON.stringify(customLinks),
         slug: joinSegments("static", "customLinks") as FullSlug,
+        ext: ".json",
+      })
+
+      // カテゴリ設定を出力
+      const categoriesPath = path.join(process.cwd(), "content/_config/categories.json")
+      let categories = { mainCategories: [] }
+      try {
+        if (fs.existsSync(categoriesPath)) {
+          categories = JSON.parse(fs.readFileSync(categoriesPath, "utf-8"))
+        }
+      } catch (e) {
+        console.warn("Failed to load categories.json:", e)
+      }
+
+      yield write({
+        ctx,
+        content: JSON.stringify(categories),
+        slug: joinSegments("static", "categories") as FullSlug,
         ext: ".json",
       })
     },

@@ -1,5 +1,6 @@
 import * as fs from "fs"
 import * as path from "path"
+import matter from "gray-matter"
 import { ParsedContent, SourceConfig, categoryTagMap, defaultColors } from "../types"
 
 // ファイル名用のslug生成
@@ -225,4 +226,148 @@ export function updateSourceConfig(content: ParsedContent, config: SourceConfig)
   }
 
   return config
+}
+
+// ソース設定をコンテンツファイルと同期（使われていないソースを削除）
+export function syncSourceConfig(
+  contentDir: string = "content/skill-tree",
+  configPath: string = "content/_config/sources.json"
+): { removed: string[]; config: SourceConfig } {
+  const config = loadSourceConfig(configPath)
+  const removed: string[] = []
+
+  // コンテンツファイルで使用されているソースIDを収集
+  const usedYouTubeChannels = new Set<string>()
+  const usedNoteAuthors = new Set<string>()
+  const usedXUsers = new Set<string>()
+  const usedBlogDomains = new Set<string>()
+
+  // 再帰的にMarkdownファイルを走査
+  function scanDir(dir: string) {
+    if (!fs.existsSync(dir)) return
+    const entries = fs.readdirSync(dir, { withFileTypes: true })
+    for (const entry of entries) {
+      if (entry.isDirectory()) {
+        scanDir(path.join(dir, entry.name))
+      } else if (entry.name.endsWith(".md")) {
+        try {
+          const filePath = path.join(dir, entry.name)
+          const content = fs.readFileSync(filePath, "utf-8")
+          // フロントマターをパース（gray-matterなしで簡易パース）
+          const match = content.match(/^---\n([\s\S]*?)\n---/)
+          if (match) {
+            const yaml = match[1]
+            // source.channelId を抽出
+            const channelIdMatch = yaml.match(/channelId:\s*(.+)/)
+            if (channelIdMatch) {
+              usedYouTubeChannels.add(channelIdMatch[1].trim())
+            }
+            // source.authorId を抽出（Note.com/X）
+            const authorIdMatch = yaml.match(/authorId:\s*(.+)/)
+            if (authorIdMatch) {
+              const typeMatch = yaml.match(/type:\s*(.+)/)
+              if (typeMatch) {
+                const type = typeMatch[1].trim()
+                if (type === "note") {
+                  usedNoteAuthors.add(authorIdMatch[1].trim())
+                } else if (type === "x") {
+                  usedXUsers.add(authorIdMatch[1].trim())
+                }
+              }
+            }
+            // source.domain を抽出
+            const domainMatch = yaml.match(/domain:\s*(.+)/)
+            if (domainMatch) {
+              usedBlogDomains.add(domainMatch[1].trim())
+            }
+          }
+        } catch {
+          // パースエラーは無視
+        }
+      }
+    }
+  }
+
+  scanDir(contentDir)
+
+  // 使われていないソースを削除
+  for (const channelId of Object.keys(config.youtube.channels)) {
+    if (!usedYouTubeChannels.has(channelId)) {
+      removed.push(`YouTube: ${config.youtube.channels[channelId].name}`)
+      delete config.youtube.channels[channelId]
+    }
+  }
+
+  for (const authorId of Object.keys(config.note.authors)) {
+    if (!usedNoteAuthors.has(authorId)) {
+      removed.push(`Note.com: ${config.note.authors[authorId].name}`)
+      delete config.note.authors[authorId]
+    }
+  }
+
+  if (config.x?.users) {
+    for (const userId of Object.keys(config.x.users)) {
+      if (!usedXUsers.has(userId)) {
+        removed.push(`X: ${config.x.users[userId].name}`)
+        delete config.x.users[userId]
+      }
+    }
+  }
+
+  if (config.blog?.domains) {
+    for (const domain of Object.keys(config.blog.domains)) {
+      if (!usedBlogDomains.has(domain)) {
+        removed.push(`ブログ: ${config.blog.domains[domain].name}`)
+        delete config.blog.domains[domain]
+      }
+    }
+  }
+
+  // 変更があれば保存
+  if (removed.length > 0) {
+    saveSourceConfig(config, configPath)
+  }
+
+  return { removed, config }
+}
+
+// displayTitleを更新
+export function updateDisplayTitle(filePath: string, displayTitle: string): void {
+  if (!fs.existsSync(filePath)) {
+    throw new Error(`ファイルが見つかりません: ${filePath}`)
+  }
+
+  const content = fs.readFileSync(filePath, "utf-8")
+  const parsed = matter(content)
+
+  // displayTitleを追加/更新
+  parsed.data.displayTitle = displayTitle
+
+  // ファイルを再構築して保存
+  const newContent = matter.stringify(parsed.content, parsed.data)
+  fs.writeFileSync(filePath, newContent, "utf-8")
+}
+
+// タイトルの自動短縮候補を生成
+export function suggestShortTitle(title: string, maxLength: number = 40): string {
+  let short = title
+    // 装飾括弧を削除
+    .replace(/【[^】]*】/g, "")
+    .replace(/（[^）]*）/g, "")
+    .replace(/\[[^\]]*\]/g, "")
+    // 装飾記号を削除
+    .replace(/〜.*$/, "")
+    .replace(/[！!？?]+/g, "")
+    // 定型句を削除
+    .replace(/(最新版|完全|決定版|徹底解説|入門講座|ご紹介|解説してみた|してみた)/g, "")
+    // 余分なスペースを整理
+    .replace(/\s+/g, " ")
+    .trim()
+
+  // 最大文字数で切り詰め
+  if (short.length > maxLength) {
+    short = short.slice(0, maxLength - 3) + "..."
+  }
+
+  return short
 }

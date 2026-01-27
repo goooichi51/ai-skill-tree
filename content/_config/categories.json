@@ -1,0 +1,39 @@
+{
+  "mainCategories": [
+    {
+      "id": "chat-ai",
+      "name": "対話型AI",
+      "shape": "circle",
+      "color": { "h": 0, "s": 70, "l": 55 },
+      "tags": ["対話型AI", "skill-tree"]
+    },
+    {
+      "id": "generative-ai",
+      "name": "生成AI",
+      "shape": "square",
+      "color": { "h": 270, "s": 60, "l": 55 },
+      "tags": ["生成AI", "skill-tree"]
+    },
+    {
+      "id": "automation",
+      "name": "自動化",
+      "shape": "diamond",
+      "color": { "h": 30, "s": 80, "l": 55 },
+      "tags": ["自動化", "skill-tree"]
+    },
+    {
+      "id": "development",
+      "name": "開発",
+      "shape": "hexagon",
+      "color": { "h": 150, "s": 60, "l": 45 },
+      "tags": ["開発", "skill-tree"]
+    },
+    {
+      "id": "frontier",
+      "name": "先端技術",
+      "shape": "star",
+      "color": { "h": 210, "s": 70, "l": 50 },
+      "tags": ["先端技術", "skill-tree"]
+    }
+  ]
+}

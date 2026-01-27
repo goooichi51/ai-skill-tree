@@ -165,6 +165,24 @@
       padding: 0.25rem 0.75rem;
       border-radius: 100px;
       font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .tag:hover {
+      background: var(--error);
+    }
+
+    .tag .remove-icon {
+      font-size: 0.7rem;
+      opacity: 0.7;
+    }
+
+    .tag:hover .remove-icon {
+      opacity: 1;
     }
 
     .message {
@@ -486,9 +504,525 @@
     .link-item .btn-remove:hover {
       background: rgba(239, 68, 68, 0.2);
     }
+
+    .search-results {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-top: 1rem;
+      max-height: 500px;
+      overflow-y: auto;
+    }
+
+    .search-result-item {
+      display: flex;
+      gap: 1rem;
+      padding: 0.75rem;
+      background: var(--bg);
+      border-radius: 8px;
+      align-items: flex-start;
+    }
+
+    .search-result-item img {
+      width: 120px;
+      height: 68px;
+      object-fit: cover;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+
+    .search-result-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .search-result-title {
+      font-weight: 500;
+      margin-bottom: 0.25rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
+
+    .search-result-meta {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .search-result-actions {
+      display: flex;
+      align-items: center;
+    }
+
+    .btn-add-small {
+      background: var(--success);
+      color: white;
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
+    }
+
+    .btn-add-small:hover {
+      background: #059669;
+    }
+
+    .search-result-item img {
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    .search-result-item img:hover {
+      opacity: 0.8;
+    }
+
+    /* モーダル */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s;
+    }
+
+    .modal-overlay.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal-content {
+      position: relative;
+      width: 90%;
+      max-width: 900px;
+      aspect-ratio: 16 / 9;
+      background: #000;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .modal-content iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: -40px;
+      right: 0;
+      background: transparent;
+      color: white;
+      font-size: 2rem;
+      padding: 0.5rem;
+      cursor: pointer;
+      border: none;
+    }
+
+    .modal-close:hover {
+      color: var(--error);
+    }
+
+    /* 統計ダッシュボード */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .stat-card {
+      background: var(--bg);
+      border-radius: 8px;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--primary) 0%, #a855f7 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .stat-label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    .stat-change {
+      font-size: 0.75rem;
+      color: var(--success);
+      margin-top: 0.25rem;
+    }
+
+    .mini-chart {
+      display: flex;
+      align-items: flex-end;
+      gap: 2px;
+      height: 40px;
+      margin-top: 1rem;
+      justify-content: center;
+    }
+
+    .mini-chart-bar {
+      width: 8px;
+      background: var(--primary);
+      border-radius: 2px;
+      opacity: 0.6;
+      transition: opacity 0.2s;
+    }
+
+    .mini-chart-bar:last-child {
+      opacity: 1;
+    }
+
+    .recent-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .recent-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.5rem 0.75rem;
+      background: var(--bg);
+      border-radius: 6px;
+      font-size: 0.9rem;
+    }
+
+    .recent-item-date {
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      flex-shrink: 0;
+    }
+
+    .recent-item-title {
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .recent-item-category {
+      font-size: 0.75rem;
+      background: var(--primary);
+      color: white;
+      padding: 0.15rem 0.5rem;
+      border-radius: 100px;
+    }
+
+    /* タイトル管理 */
+    .title-filters {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .title-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      max-height: 600px;
+      overflow-y: auto;
+    }
+
+    .title-item {
+      background: var(--bg);
+      border-radius: 8px;
+      padding: 1rem;
+    }
+
+    .title-original {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+
+    .title-original-text {
+      flex: 1;
+      word-break: break-word;
+    }
+
+    .title-length {
+      font-size: 0.75rem;
+      background: var(--border);
+      padding: 0.15rem 0.5rem;
+      border-radius: 100px;
+      flex-shrink: 0;
+    }
+
+    .title-input-row {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .title-input-row input {
+      flex: 1;
+    }
+
+    .title-char-count {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      min-width: 40px;
+      text-align: right;
+    }
+
+    .title-char-count.warning {
+      color: #f59e0b;
+    }
+
+    .title-char-count.error {
+      color: var(--error);
+    }
+
+    .btn-suggest {
+      background: var(--border);
+      color: var(--text);
+      padding: 0.5rem 0.75rem;
+      font-size: 0.85rem;
+    }
+
+    .btn-suggest:hover {
+      background: #475569;
+    }
+
+    .btn-save-title {
+      background: var(--success);
+      color: white;
+      padding: 0.5rem 0.75rem;
+      font-size: 0.85rem;
+    }
+
+    .btn-save-title:hover {
+      background: #059669;
+    }
+
+    .btn-save-title:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .title-meta {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.5rem;
+    }
+
+    /* カテゴリ管理 */
+    .category-tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .category-tab {
+      padding: 0.5rem 1rem;
+      background: var(--bg);
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--text-muted);
+      transition: all 0.2s;
+    }
+
+    .category-tab:hover {
+      background: var(--border);
+    }
+
+    .category-tab.active {
+      background: var(--primary);
+      color: white;
+    }
+
+    .category-panel {
+      display: none;
+    }
+
+    .category-panel.active {
+      display: block;
+    }
+
+    .category-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .category-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 1rem;
+      background: var(--bg);
+      border-radius: 8px;
+    }
+
+    .category-info {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .category-shape {
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+    }
+
+    .category-name {
+      font-weight: 500;
+    }
+
+    .category-id {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-left: 0.5rem;
+    }
+
+    .category-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .btn-edit, .btn-delete-cat {
+      padding: 0.4rem 0.6rem;
+      font-size: 0.8rem;
+      border-radius: 4px;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-edit {
+      background: var(--border);
+      color: var(--text);
+    }
+
+    .btn-delete-cat {
+      background: var(--error);
+      color: white;
+    }
+
+    .btn-add-category {
+      margin-top: 1rem;
+      width: 100%;
+      padding: 0.75rem;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    .btn-add-category:hover {
+      opacity: 0.9;
+    }
+
+    .category-form {
+      background: var(--bg);
+      padding: 1rem;
+      border-radius: 8px;
+      margin-top: 1rem;
+      display: none;
+    }
+
+    .category-form.active {
+      display: block;
+    }
+
+    .category-form .form-row {
+      margin-bottom: 0.75rem;
+    }
+
+    .shape-selector {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .shape-option {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--border);
+      border: 2px solid transparent;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1.2rem;
+    }
+
+    .shape-option:hover {
+      border-color: var(--text-muted);
+    }
+
+    .shape-option.selected {
+      border-color: var(--primary);
+      background: var(--card-bg);
+    }
+
+    .color-preview {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .color-swatch {
+      width: 36px;
+      height: 36px;
+      border-radius: 6px;
+      border: 2px solid var(--border);
+    }
+
+    .color-inputs {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .color-inputs input {
+      width: 60px;
+    }
+
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
   </style>
 </head>
 <body>
+  <!-- 動画プレビューモーダル -->
+  <div class="modal-overlay" id="videoModal" onclick="closeVideoModal(event)">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeVideoModal()">&times;</button>
+      <iframe id="videoFrame" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+  </div>
+
   <div class="container">
     <h1>AI Skill Map 管理ツール</h1>
     <p class="subtitle">URLを貼り付けてコンテンツを追加</p>
@@ -502,6 +1036,31 @@
         <span class="icon">🌐</span>
         公開サイト
       </a>
+    </div>
+
+    <div class="card">
+      <h2>📊 統計</h2>
+      <div class="stats-grid" id="statsGrid">
+        <div class="stat-card">
+          <div class="stat-value" id="totalNodes">-</div>
+          <div class="stat-label">総ノード数</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="recentNodes">-</div>
+          <div class="stat-label">今週追加</div>
+          <div class="stat-change" id="recentChange"></div>
+        </div>
+        <div class="stat-card" style="grid-column: span 2;">
+          <div class="stat-label" style="margin-bottom: 0.5rem;">30日間の推移</div>
+          <div class="mini-chart" id="miniChart"></div>
+        </div>
+      </div>
+      <div style="margin-top: 1rem;">
+        <h3 style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.75rem;">最近追加</h3>
+        <div class="recent-list" id="recentList">
+          <p class="section-empty">読み込み中...</p>
+        </div>
+      </div>
     </div>
 
     <div class="card">
@@ -524,13 +1083,15 @@
 
         <div class="form-row" style="margin-top: 1rem;">
           <div class="form-group">
-            <label for="category">カテゴリ</label>
-            <select id="category">
-              <option value="chat-ai">対話型AI</option>
-              <option value="generative-ai">生成AI</option>
-              <option value="automation">自動化</option>
-              <option value="development">開発</option>
-              <option value="frontier">先端技術</option>
+            <label for="mainCategory">大カテゴリ</label>
+            <select id="mainCategory" onchange="onMainCategoryChange()">
+              <!-- 動的に読み込まれます -->
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="subCategory">リンク先（中カテゴリ）</label>
+            <select id="subCategory">
+              <option value="">-- 大カテゴリ直下 --</option>
             </select>
           </div>
           <button class="btn-success" id="addBtn" onclick="addContent()">
@@ -544,6 +1105,150 @@
       <p class="help-text">
         対応: YouTube動画、Note.com記事、Xポスト、一般ブログ記事
       </p>
+    </div>
+
+    <div class="card">
+      <h2>🔍 YouTube検索</h2>
+      <p class="help-text" style="margin-bottom: 1rem;">キーワードで検索して動画を追加できます</p>
+
+      <div class="input-group">
+        <input type="text" id="searchQuery" placeholder="ChatGPT 使い方、Claude プロンプト など">
+        <button class="btn-primary" id="searchBtn" onclick="searchYouTube()">
+          検索
+        </button>
+      </div>
+
+      <div id="searchResults"></div>
+      <div class="message" id="searchMessage"></div>
+    </div>
+
+    <div class="card">
+      <h2>✏️ タイトル管理</h2>
+      <p class="help-text" style="margin-bottom: 1rem;">長いタイトルを短縮できます（グラフ表示用）</p>
+
+      <div class="title-filters">
+        <select id="titleFilter" onchange="loadTitles()">
+          <option value="long">長いタイトルのみ（40文字以上）</option>
+          <option value="all">すべて表示</option>
+          <option value="unset">未設定のみ</option>
+        </select>
+        <select id="titleCategory" onchange="loadTitles()">
+          <option value="">全カテゴリ</option>
+          <!-- 動的に読み込まれます -->
+        </select>
+      </div>
+
+      <div class="title-list" id="titleList">
+        <p class="section-empty">読み込み中...</p>
+      </div>
+
+      <div class="message" id="titleMessage"></div>
+    </div>
+
+    <div class="card">
+      <h2>📁 カテゴリ管理</h2>
+      <p class="help-text" style="margin-bottom: 1rem;">大カテゴリ・中カテゴリを追加・削除できます</p>
+
+      <div class="category-tabs">
+        <button class="category-tab active" onclick="switchCategoryTab('main')">大カテゴリ</button>
+        <button class="category-tab" onclick="switchCategoryTab('sub')">中カテゴリ</button>
+      </div>
+
+      <!-- 大カテゴリパネル -->
+      <div class="category-panel active" id="mainCategoryPanel">
+        <div class="category-list" id="mainCategoryList">
+          <p class="section-empty">読み込み中...</p>
+        </div>
+
+        <button class="btn-add-category" onclick="toggleMainCategoryForm()">
+          + 大カテゴリを追加
+        </button>
+
+        <div class="category-form" id="mainCategoryForm">
+          <div class="form-row">
+            <div class="form-group flex-1">
+              <label>ID（英小文字・ハイフン）</label>
+              <input type="text" id="newMainCatId" placeholder="data-science">
+            </div>
+            <div class="form-group flex-1">
+              <label>表示名</label>
+              <input type="text" id="newMainCatName" placeholder="データサイエンス">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>形状</label>
+              <div class="shape-selector" id="shapeSelector">
+                <div class="shape-option selected" data-shape="circle" onclick="selectShape(this)">●</div>
+                <div class="shape-option" data-shape="square" onclick="selectShape(this)">■</div>
+                <div class="shape-option" data-shape="diamond" onclick="selectShape(this)">◆</div>
+                <div class="shape-option" data-shape="hexagon" onclick="selectShape(this)">⬡</div>
+                <div class="shape-option" data-shape="star" onclick="selectShape(this)">★</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>色（HSL）</label>
+              <div class="color-preview">
+                <div class="color-swatch" id="colorSwatch" style="background: hsl(200, 60%, 50%)"></div>
+                <div class="color-inputs">
+                  <input type="number" id="colorH" value="200" min="0" max="360" placeholder="H" oninput="updateColorPreview()">
+                  <input type="number" id="colorS" value="60" min="0" max="100" placeholder="S" oninput="updateColorPreview()">
+                  <input type="number" id="colorL" value="50" min="0" max="100" placeholder="L" oninput="updateColorPreview()">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button class="btn-secondary" onclick="toggleMainCategoryForm()">キャンセル</button>
+            <button class="btn-primary" onclick="addMainCategory()">追加</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 中カテゴリパネル -->
+      <div class="category-panel" id="subCategoryPanel">
+        <div class="form-row" style="margin-bottom: 1rem;">
+          <div class="form-group flex-1">
+            <label>大カテゴリを選択</label>
+            <select id="subCatParent" onchange="loadSubCategories()">
+              <option value="">-- 選択してください --</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="category-list" id="subCategoryList">
+          <p class="section-empty">大カテゴリを選択してください</p>
+        </div>
+
+        <button class="btn-add-category" onclick="toggleSubCategoryForm()" id="addSubCatBtn" style="display: none;">
+          + 中カテゴリを追加
+        </button>
+
+        <div class="category-form" id="subCategoryForm">
+          <div class="form-row">
+            <div class="form-group flex-1">
+              <label>ID（英小文字・ハイフン）</label>
+              <input type="text" id="newSubCatId" placeholder="grok">
+            </div>
+            <div class="form-group flex-1">
+              <label>タイトル</label>
+              <input type="text" id="newSubCatTitle" placeholder="Grok">
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button class="btn-secondary" onclick="toggleSubCategoryForm()">キャンセル</button>
+            <button class="btn-primary" onclick="addSubCategory()">追加</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="message" id="categoryMessage"></div>
     </div>
 
     <div class="card">
@@ -669,6 +1374,58 @@
   <script>
     const API_BASE = 'http://localhost:3456';
     let currentContent = null;
+    let categoryTree = {};
+
+    // カテゴリツリーを読み込み
+    async function loadCategoryTree() {
+      try {
+        // カテゴリ設定とツリーの両方を取得
+        const [configResponse, treeResponse] = await Promise.all([
+          fetch(`${API_BASE}/api/categories/config`),
+          fetch(`${API_BASE}/api/categories/tree`)
+        ]);
+
+        const configData = await configResponse.json();
+        categoryTree = await treeResponse.json();
+
+        // 大カテゴリセレクターを動的に設定
+        const mainCatSelect = document.getElementById('mainCategory');
+        const titleCatSelect = document.getElementById('titleCategory');
+
+        if (configData.success && configData.mainCategories) {
+          // コンテンツ追加フォームの大カテゴリセレクター
+          mainCatSelect.innerHTML = configData.mainCategories.map(cat =>
+            `<option value="${cat.id}">${escapeHtml(cat.name)}</option>`
+          ).join('');
+
+          // タイトル管理のカテゴリフィルター
+          titleCatSelect.innerHTML = '<option value="">全カテゴリ</option>' +
+            configData.mainCategories.map(cat =>
+              `<option value="${cat.id}">${escapeHtml(cat.name)}</option>`
+            ).join('');
+        }
+
+        // 初期表示
+        onMainCategoryChange();
+      } catch (error) {
+        console.error('Failed to load category tree:', error);
+      }
+    }
+
+    // 大カテゴリ変更時に中カテゴリを更新
+    function onMainCategoryChange() {
+      const mainCat = document.getElementById('mainCategory').value;
+      const subSelect = document.getElementById('subCategory');
+      subSelect.innerHTML = '<option value="">-- 大カテゴリ直下 --</option>';
+
+      const subCategories = categoryTree[mainCat] || [];
+      for (const sub of subCategories) {
+        const option = document.createElement('option');
+        option.value = sub.slug;
+        option.textContent = sub.title;
+        subSelect.appendChild(option);
+      }
+    }
 
     // URLからコンテンツをプレビュー
     async function preview() {
@@ -697,6 +1454,14 @@
 
         currentContent = data.content;
 
+        // 重複チェック
+        if (data.isDuplicate) {
+          showMessage(`⚠️ このURLは既に追加されています: ${data.existingFile}`, 'error');
+          document.getElementById('addBtn').disabled = true;
+        } else {
+          document.getElementById('addBtn').disabled = false;
+        }
+
         // プレビュー表示
         document.getElementById('previewTitle').textContent = data.content.title;
 
@@ -706,10 +1471,7 @@
         if (data.content.source.publishedAt) meta.push(`公開日: ${data.content.source.publishedAt}`);
         document.getElementById('previewMeta').textContent = meta.join(' | ');
 
-        const tagsContainer = document.getElementById('previewTags');
-        tagsContainer.innerHTML = data.content.suggestedTags
-          .map(tag => `<span class="tag">${tag}</span>`)
-          .join('');
+        renderTags();
 
         document.getElementById('previewBox').classList.add('show');
         hideMessage();
@@ -726,17 +1488,25 @@
     // コンテンツを追加
     async function addContent() {
       const url = document.getElementById('url').value.trim();
-      const category = document.getElementById('category').value;
+      const mainCategory = document.getElementById('mainCategory').value;
+      const subCategory = document.getElementById('subCategory').value;
 
       const btn = document.getElementById('addBtn');
       btn.disabled = true;
       btn.innerHTML = '<span class="spinner"></span>追加中...';
 
       try {
+        // 編集後のタグを送信
+        const tags = currentContent?.suggestedTags || [];
         const response = await fetch(`${API_BASE}/api/add`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ url, category }),
+          body: JSON.stringify({
+            url,
+            category: mainCategory,
+            tags,
+            linkTo: subCategory || null  // 中カテゴリへのリンク
+          }),
         });
 
         const data = await response.json();
@@ -752,8 +1522,10 @@
         document.getElementById('previewBox').classList.remove('show');
         currentContent = null;
 
-        // ソースリストを更新
+        // ソースリストとリンクを更新
         loadSources();
+        loadCustomLinks();
+        loadNodes();
 
       } catch (error) {
         showMessage(error.message, 'error');
@@ -1176,11 +1948,726 @@
       }
     }
 
-    // 初期読み込み
+    // タグを描画
+    function renderTags() {
+      const tagsContainer = document.getElementById('previewTags');
+      if (!currentContent || !currentContent.suggestedTags) {
+        tagsContainer.innerHTML = '';
+        return;
+      }
+      tagsContainer.innerHTML = currentContent.suggestedTags
+        .map(tag => `<span class="tag" onclick="removeTag('${tag}')">${tag}<span class="remove-icon">✕</span></span>`)
+        .join('');
+    }
+
+    // タグを削除
+    function removeTag(tag) {
+      if (!currentContent || !currentContent.suggestedTags) return;
+      currentContent.suggestedTags = currentContent.suggestedTags.filter(t => t !== tag);
+      renderTags();
+    }
+
+    // YouTube検索
+    async function searchYouTube() {
+      const query = document.getElementById('searchQuery').value.trim();
+      if (!query) {
+        showSearchMessage('検索キーワードを入力してください', 'error');
+        return;
+      }
+
+      const btn = document.getElementById('searchBtn');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span>検索中...';
+      hideSearchMessage();
+
+      try {
+        const response = await fetch(`${API_BASE}/api/youtube/search`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ query, maxResults: 10 }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || '検索に失敗しました');
+        }
+
+        if (data.results.length === 0) {
+          document.getElementById('searchResults').innerHTML =
+            '<p class="section-empty">検索結果がありません</p>';
+          return;
+        }
+
+        document.getElementById('searchResults').innerHTML = `
+          <div class="search-results">
+            ${data.results.map(video => `
+              <div class="search-result-item">
+                <img src="${video.thumbnail}" alt="${video.title}" onclick="openVideoModal('${video.videoId}')" title="クリックでプレビュー">
+                <div class="search-result-info">
+                  <div class="search-result-title">${video.title}</div>
+                  <div class="search-result-meta">${video.channel} • ${video.publishedAt}</div>
+                </div>
+                <div class="search-result-actions">
+                  <button class="btn-add-small" onclick="addFromSearch('${video.url}')">
+                    追加
+                  </button>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        `;
+
+      } catch (error) {
+        showSearchMessage(error.message, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '検索';
+      }
+    }
+
+    // 検索結果から追加（URLを入力欄にセットしてプレビュー）
+    async function addFromSearch(url) {
+      document.getElementById('url').value = url;
+      // コンテンツ追加セクションにスクロール
+      document.querySelector('.card').scrollIntoView({ behavior: 'smooth' });
+      // プレビューを自動実行
+      await preview();
+    }
+
+    // 検索メッセージ表示
+    function showSearchMessage(text, type) {
+      const msg = document.getElementById('searchMessage');
+      msg.textContent = text;
+      msg.className = `message show ${type}`;
+    }
+
+    function hideSearchMessage() {
+      document.getElementById('searchMessage').classList.remove('show');
+    }
+
+    // Enterキーで検索
+    document.getElementById('searchQuery').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        searchYouTube();
+      }
+    });
+
+    // 動画プレビューモーダル
+    function openVideoModal(videoId) {
+      const modal = document.getElementById('videoModal');
+      const iframe = document.getElementById('videoFrame');
+      iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+      modal.classList.add('show');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeVideoModal(event) {
+      // モーダルコンテンツ内のクリックは閉じない
+      if (event && event.target.closest('.modal-content') && !event.target.closest('.modal-close')) {
+        return;
+      }
+      const modal = document.getElementById('videoModal');
+      const iframe = document.getElementById('videoFrame');
+      modal.classList.remove('show');
+      iframe.src = '';
+      document.body.style.overflow = '';
+    }
+
+    // ESCキーでモーダルを閉じる
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeVideoModal();
+      }
+    });
+
+    // タイトル一覧を読み込み
+    async function loadTitles() {
+      const container = document.getElementById('titleList');
+      const filter = document.getElementById('titleFilter').value;
+      const category = document.getElementById('titleCategory').value;
+
+      container.innerHTML = '<p class="section-empty">読み込み中...</p>';
+
+      try {
+        const response = await fetch(`${API_BASE}/api/titles`);
+        const data = await response.json();
+
+        if (!data.success) throw new Error('タイトル取得失敗');
+
+        let nodes = data.nodes;
+
+        // カテゴリフィルター
+        if (category) {
+          nodes = nodes.filter(n => n.category === category);
+        }
+
+        // 表示フィルター
+        if (filter === 'long') {
+          nodes = nodes.filter(n => n.titleLength >= 40);
+        } else if (filter === 'unset') {
+          nodes = nodes.filter(n => !n.displayTitle);
+        }
+
+        if (nodes.length === 0) {
+          container.innerHTML = '<p class="section-empty">該当するタイトルはありません</p>';
+          return;
+        }
+
+        container.innerHTML = nodes.map(node => `
+          <div class="title-item" data-file="${node.filePath}">
+            <div class="title-original">
+              <span class="title-original-text">${escapeHtml(node.title)}</span>
+              <span class="title-length">${node.titleLength}文字</span>
+            </div>
+            <div class="title-input-row">
+              <input type="text"
+                     value="${escapeHtml(node.displayTitle || '')}"
+                     placeholder="短縮タイトルを入力..."
+                     oninput="updateCharCount(this)"
+                     data-original="${escapeHtml(node.title)}">
+              <span class="title-char-count">${(node.displayTitle || '').length}</span>
+              <button class="btn-suggest" onclick="suggestTitle(this)">自動</button>
+              <button class="btn-save-title" onclick="saveTitle(this, '${node.filePath}')" disabled>保存</button>
+            </div>
+            <div class="title-meta">
+              ${node.category} ${node.sourceType ? `• ${node.sourceType}` : ''}
+            </div>
+          </div>
+        `).join('');
+
+        // 入力イベントでボタン有効化
+        container.querySelectorAll('input').forEach(input => {
+          input.addEventListener('input', function() {
+            const saveBtn = this.parentElement.querySelector('.btn-save-title');
+            saveBtn.disabled = false;
+          });
+        });
+
+      } catch (error) {
+        console.error('Titles error:', error);
+        container.innerHTML = '<p class="section-empty">タイトルの読み込みに失敗しました</p>';
+      }
+    }
+
+    // 文字数カウント更新
+    function updateCharCount(input) {
+      const count = input.value.length;
+      const countEl = input.parentElement.querySelector('.title-char-count');
+      countEl.textContent = count;
+      countEl.className = 'title-char-count';
+      if (count > 50) {
+        countEl.classList.add('error');
+      } else if (count > 40) {
+        countEl.classList.add('warning');
+      }
+    }
+
+    // 自動短縮候補を生成
+    async function suggestTitle(btn) {
+      const row = btn.closest('.title-input-row');
+      const input = row.querySelector('input');
+      const originalTitle = input.dataset.original;
+
+      btn.disabled = true;
+      btn.textContent = '...';
+
+      try {
+        const response = await fetch(`${API_BASE}/api/titles/suggest`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title: originalTitle, maxLength: 40 }),
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          input.value = data.suggestion;
+          updateCharCount(input);
+          row.querySelector('.btn-save-title').disabled = false;
+        }
+      } catch (error) {
+        console.error('Suggest error:', error);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '自動';
+      }
+    }
+
+    // タイトルを保存
+    async function saveTitle(btn, filePath) {
+      const row = btn.closest('.title-input-row');
+      const input = row.querySelector('input');
+      const displayTitle = input.value.trim();
+
+      if (!displayTitle) {
+        showTitleMessage('短縮タイトルを入力してください', 'error');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = '...';
+
+      try {
+        const response = await fetch(`${API_BASE}/api/titles`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ updates: [{ filePath, displayTitle }] }),
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          showTitleMessage(`保存しました: ${displayTitle}`, 'success');
+          btn.textContent = '✓';
+          setTimeout(() => {
+            btn.textContent = '保存';
+          }, 2000);
+        } else {
+          throw new Error(data.error || '保存失敗');
+        }
+      } catch (error) {
+        showTitleMessage(error.message, 'error');
+        btn.textContent = '保存';
+        btn.disabled = false;
+      }
+    }
+
+    // タイトルメッセージ
+    function showTitleMessage(text, type) {
+      const msg = document.getElementById('titleMessage');
+      msg.textContent = text;
+      msg.className = `message show ${type}`;
+      setTimeout(() => {
+        msg.classList.remove('show');
+      }, 3000);
+    }
+
+    // HTMLエスケープ
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // 統計情報を読み込み
+    async function loadStats() {
+      try {
+        const response = await fetch(`${API_BASE}/api/stats`);
+        const data = await response.json();
+
+        if (!data.success) throw new Error('統計取得失敗');
+
+        // 総ノード数
+        document.getElementById('totalNodes').textContent = data.totalNodes;
+        document.getElementById('recentNodes').textContent = `+${data.recentNodes}`;
+
+        // ミニチャート（30日間の推移）
+        const chartContainer = document.getElementById('miniChart');
+        const dates = Object.keys(data.dailyStats).sort();
+        if (dates.length > 0) {
+          const values = dates.map(d => data.dailyStats[d]);
+          const max = Math.max(...values);
+          const min = Math.min(...values);
+          const range = max - min || 1;
+
+          chartContainer.innerHTML = dates.slice(-14).map((date, i) => {
+            const value = data.dailyStats[date];
+            const height = ((value - min) / range * 30) + 10;
+            return `<div class="mini-chart-bar" style="height: ${height}px;" title="${date}: ${value}ノード"></div>`;
+          }).join('');
+        } else {
+          chartContainer.innerHTML = '<span style="color: var(--text-muted); font-size: 0.8rem;">データなし</span>';
+        }
+
+        // 最近追加されたアイテム
+        const recentList = document.getElementById('recentList');
+        if (data.recentItems.length > 0) {
+          // カテゴリ名を動的に取得（キャッシュがあれば使用）
+          const getCategoryLabel = (catId) => {
+            if (categoryConfigCache && categoryConfigCache.mainCategories) {
+              const cat = categoryConfigCache.mainCategories.find(c => c.id === catId);
+              if (cat) return cat.name;
+            }
+            return catId;
+          };
+          recentList.innerHTML = data.recentItems.map(item => `
+            <div class="recent-item">
+              <span class="recent-item-date">${item.date}</span>
+              <span class="recent-item-title">${item.title}</span>
+              <span class="recent-item-category">${getCategoryLabel(item.category)}</span>
+            </div>
+          `).join('');
+        } else {
+          recentList.innerHTML = '<p class="section-empty">今週の追加はありません</p>';
+        }
+
+      } catch (error) {
+        console.error('Stats error:', error);
+        document.getElementById('totalNodes').textContent = '-';
+        document.getElementById('recentNodes').textContent = '-';
+      }
+    }
+
+    // カテゴリ設定のキャッシュ
+    let categoryConfigCache = null;
+
+    // 形状の記号マッピング
+    const shapeSymbols = {
+      'circle': '●',
+      'square': '■',
+      'diamond': '◆',
+      'hexagon': '⬡',
+      'star': '★'
+    };
+
+    // カテゴリ設定を取得
+    async function loadCategoryConfig() {
+      try {
+        const response = await fetch(`${API_BASE}/api/categories/config`);
+        const data = await response.json();
+        if (data.success) {
+          categoryConfigCache = data;
+          return data;
+        }
+      } catch (error) {
+        console.error('Category config error:', error);
+      }
+      return { mainCategories: [] };
+    }
+
+    // タブ切り替え
+    function switchCategoryTab(tab) {
+      document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.category-panel').forEach(p => p.classList.remove('active'));
+
+      if (tab === 'main') {
+        document.querySelector('.category-tab:nth-child(1)').classList.add('active');
+        document.getElementById('mainCategoryPanel').classList.add('active');
+      } else {
+        document.querySelector('.category-tab:nth-child(2)').classList.add('active');
+        document.getElementById('subCategoryPanel').classList.add('active');
+      }
+    }
+
+    // 大カテゴリ一覧を読み込み
+    async function loadMainCategories() {
+      const container = document.getElementById('mainCategoryList');
+      container.innerHTML = '<p class="section-empty">読み込み中...</p>';
+
+      try {
+        const config = await loadCategoryConfig();
+
+        if (!config.mainCategories || config.mainCategories.length === 0) {
+          container.innerHTML = '<p class="section-empty">カテゴリがありません</p>';
+          return;
+        }
+
+        container.innerHTML = config.mainCategories.map(cat => `
+          <div class="category-item" data-id="${cat.id}">
+            <div class="category-info">
+              <div class="category-shape" style="color: hsl(${cat.color.h}, ${cat.color.s}%, ${cat.color.l}%)">
+                ${shapeSymbols[cat.shape] || '●'}
+              </div>
+              <span class="category-name">${escapeHtml(cat.name)}</span>
+              <span class="category-id">(${cat.id})</span>
+            </div>
+            <div class="category-actions">
+              <button class="btn-delete-cat" onclick="deleteMainCategory('${cat.id}', '${escapeHtml(cat.name)}')">削除</button>
+            </div>
+          </div>
+        `).join('');
+
+        // 中カテゴリパネルのセレクターも更新
+        updateSubCatParentSelector(config.mainCategories);
+
+      } catch (error) {
+        console.error('Load main categories error:', error);
+        container.innerHTML = '<p class="section-empty">読み込みに失敗しました</p>';
+      }
+    }
+
+    // 中カテゴリの親セレクターを更新
+    function updateSubCatParentSelector(categories) {
+      const select = document.getElementById('subCatParent');
+      select.innerHTML = '<option value="">-- 選択してください --</option>';
+      select.innerHTML += categories.map(cat =>
+        `<option value="${cat.id}">${escapeHtml(cat.name)}</option>`
+      ).join('');
+    }
+
+    // 中カテゴリを読み込み
+    async function loadSubCategories() {
+      const parentId = document.getElementById('subCatParent').value;
+      const container = document.getElementById('subCategoryList');
+      const addBtn = document.getElementById('addSubCatBtn');
+
+      if (!parentId) {
+        container.innerHTML = '<p class="section-empty">大カテゴリを選択してください</p>';
+        addBtn.style.display = 'none';
+        return;
+      }
+
+      container.innerHTML = '<p class="section-empty">読み込み中...</p>';
+
+      try {
+        const response = await fetch(`${API_BASE}/api/categories/tree`);
+        const tree = await response.json();
+
+        const subs = tree[parentId] || [];
+        if (subs.length === 0) {
+          container.innerHTML = '<p class="section-empty">中カテゴリがありません</p>';
+        } else {
+          container.innerHTML = subs.map(sub => `
+            <div class="category-item" data-id="${sub.slug}">
+              <div class="category-info">
+                <span class="category-name">${escapeHtml(sub.title)}</span>
+                <span class="category-id">(${sub.slug})</span>
+              </div>
+              <div class="category-actions">
+                <button class="btn-delete-cat" onclick="deleteSubCategory('${parentId}', '${sub.slug}', '${escapeHtml(sub.title)}')">削除</button>
+              </div>
+            </div>
+          `).join('');
+        }
+
+        addBtn.style.display = 'block';
+
+      } catch (error) {
+        console.error('Load sub categories error:', error);
+        container.innerHTML = '<p class="section-empty">読み込みに失敗しました</p>';
+      }
+    }
+
+    // 大カテゴリフォームの表示切替
+    function toggleMainCategoryForm() {
+      const form = document.getElementById('mainCategoryForm');
+      form.classList.toggle('active');
+      if (!form.classList.contains('active')) {
+        document.getElementById('newMainCatId').value = '';
+        document.getElementById('newMainCatName').value = '';
+        document.getElementById('colorH').value = '200';
+        document.getElementById('colorS').value = '60';
+        document.getElementById('colorL').value = '50';
+        updateColorPreview();
+        document.querySelectorAll('.shape-option').forEach(o => o.classList.remove('selected'));
+        document.querySelector('.shape-option[data-shape="circle"]').classList.add('selected');
+      }
+    }
+
+    // 中カテゴリフォームの表示切替
+    function toggleSubCategoryForm() {
+      const form = document.getElementById('subCategoryForm');
+      form.classList.toggle('active');
+      if (!form.classList.contains('active')) {
+        document.getElementById('newSubCatId').value = '';
+        document.getElementById('newSubCatTitle').value = '';
+      }
+    }
+
+    // 形状を選択
+    function selectShape(el) {
+      document.querySelectorAll('.shape-option').forEach(o => o.classList.remove('selected'));
+      el.classList.add('selected');
+    }
+
+    // 色プレビューを更新
+    function updateColorPreview() {
+      const h = document.getElementById('colorH').value;
+      const s = document.getElementById('colorS').value;
+      const l = document.getElementById('colorL').value;
+      document.getElementById('colorSwatch').style.background = `hsl(${h}, ${s}%, ${l}%)`;
+    }
+
+    // 大カテゴリを追加
+    async function addMainCategory() {
+      const id = document.getElementById('newMainCatId').value.trim();
+      const name = document.getElementById('newMainCatName').value.trim();
+      const shape = document.querySelector('.shape-option.selected')?.dataset.shape || 'circle';
+      const h = parseInt(document.getElementById('colorH').value) || 200;
+      const s = parseInt(document.getElementById('colorS').value) || 60;
+      const l = parseInt(document.getElementById('colorL').value) || 50;
+
+      if (!id || !name) {
+        showCategoryMessage('IDと名前を入力してください', 'error');
+        return;
+      }
+
+      if (!/^[a-z0-9-]+$/.test(id)) {
+        showCategoryMessage('IDは英小文字、数字、ハイフンのみ使用できます', 'error');
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_BASE}/api/categories/main`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            id,
+            name,
+            shape,
+            color: { h, s, l },
+            tags: [name, 'skill-tree']
+          })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          showCategoryMessage(`大カテゴリ「${name}」を追加しました`, 'success');
+          toggleMainCategoryForm();
+          loadMainCategories();
+          loadCategoryTree(); // コンテンツ追加のセレクターも更新
+        } else {
+          showCategoryMessage(data.error || '追加に失敗しました', 'error');
+        }
+      } catch (error) {
+        showCategoryMessage('追加に失敗しました', 'error');
+      }
+    }
+
+    // 中カテゴリを追加
+    async function addSubCategory() {
+      const parentId = document.getElementById('subCatParent').value;
+      const id = document.getElementById('newSubCatId').value.trim();
+      const title = document.getElementById('newSubCatTitle').value.trim();
+
+      if (!parentId) {
+        showCategoryMessage('大カテゴリを選択してください', 'error');
+        return;
+      }
+
+      if (!id || !title) {
+        showCategoryMessage('IDとタイトルを入力してください', 'error');
+        return;
+      }
+
+      if (!/^[a-z0-9-]+$/.test(id)) {
+        showCategoryMessage('IDは英小文字、数字、ハイフンのみ使用できます', 'error');
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_BASE}/api/categories/sub`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ parentId, id, title })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          showCategoryMessage(`中カテゴリ「${title}」を追加しました`, 'success');
+          toggleSubCategoryForm();
+          loadSubCategories();
+          loadCategoryTree(); // コンテンツ追加のセレクターも更新
+        } else {
+          showCategoryMessage(data.error || '追加に失敗しました', 'error');
+        }
+      } catch (error) {
+        showCategoryMessage('追加に失敗しました', 'error');
+      }
+    }
+
+    // 大カテゴリを削除
+    async function deleteMainCategory(id, name) {
+      if (!confirm(`大カテゴリ「${name}」を削除しますか？\n\n※設定のみ削除されます。ディレクトリは削除されません。`)) {
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_BASE}/api/categories/main/${id}`, {
+          method: 'DELETE'
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          showCategoryMessage(`大カテゴリ「${name}」を削除しました`, 'success');
+          loadMainCategories();
+          loadCategoryTree();
+        } else if (data.hasContent) {
+          if (confirm(`このカテゴリには${data.contentCount}件のコンテンツがあります。\n本当に削除しますか？`)) {
+            const forceResponse = await fetch(`${API_BASE}/api/categories/main/${id}?force=true`, {
+              method: 'DELETE'
+            });
+            const forceData = await forceResponse.json();
+            if (forceData.success) {
+              showCategoryMessage(`大カテゴリ「${name}」を削除しました`, 'success');
+              loadMainCategories();
+              loadCategoryTree();
+            } else {
+              showCategoryMessage(forceData.error || '削除に失敗しました', 'error');
+            }
+          }
+        } else {
+          showCategoryMessage(data.error || '削除に失敗しました', 'error');
+        }
+      } catch (error) {
+        showCategoryMessage('削除に失敗しました', 'error');
+      }
+    }
+
+    // 中カテゴリを削除
+    async function deleteSubCategory(parentId, id, title) {
+      if (!confirm(`中カテゴリ「${title}」を削除しますか？\n\n※ファイルも削除されます。`)) {
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_BASE}/api/categories/sub/${parentId}/${id}`, {
+          method: 'DELETE'
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          showCategoryMessage(`中カテゴリ「${title}」を削除しました`, 'success');
+          loadSubCategories();
+          loadCategoryTree();
+        } else if (data.hasLinks) {
+          if (confirm(`このカテゴリには${data.linkCount}件のリンクがあります。\n本当に削除しますか？`)) {
+            const forceResponse = await fetch(`${API_BASE}/api/categories/sub/${parentId}/${id}?force=true`, {
+              method: 'DELETE'
+            });
+            const forceData = await forceResponse.json();
+            if (forceData.success) {
+              showCategoryMessage(`中カテゴリ「${title}」を削除しました`, 'success');
+              loadSubCategories();
+              loadCategoryTree();
+            } else {
+              showCategoryMessage(forceData.error || '削除に失敗しました', 'error');
+            }
+          }
+        } else {
+          showCategoryMessage(data.error || '削除に失敗しました', 'error');
+        }
+      } catch (error) {
+        showCategoryMessage('削除に失敗しました', 'error');
+      }
+    }
+
+    // カテゴリメッセージ
+    function showCategoryMessage(text, type) {
+      const msg = document.getElementById('categoryMessage');
+      msg.textContent = text;
+      msg.className = `message show ${type}`;
+      setTimeout(() => {
+        msg.classList.remove('show');
+      }, 3000);
+    }
+
+    // 初期読み込み（カテゴリ設定を先に読み込む）
+    loadCategoryConfig().then(() => {
+      loadStats();
+    });
     loadSources();
     loadGitStatus();
     loadNodes();
     loadCustomLinks();
+    loadCategoryTree();
+    loadTitles();
+    loadMainCategories();
   </script>
 </body>
 </html>
