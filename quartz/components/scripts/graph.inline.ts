@@ -116,6 +116,15 @@ const defaultCategoryConfig: CategoryConfig = {
   ],
 }
 
+// ベースパスを取得（GitHub Pagesのサブパス対応）
+function getBasePath(): string {
+  // pathToRoot関数と同じロジックを使用
+  const pathname = window.location.pathname
+  // /ai-skill-tree/skill-tree/chat-ai/ のような場合、/ai-skill-tree/ を返す
+  const match = pathname.match(/^\/[^\/]+\//)
+  return match ? match[0] : "/"
+}
+
 // カテゴリ設定をキャッシュ
 let categoryConfigCache: CategoryConfig | null = null
 
@@ -124,7 +133,8 @@ async function getCategoryConfig(): Promise<CategoryConfig> {
   if (categoryConfigCache) return categoryConfigCache
 
   try {
-    const response = await fetch("/static/categories.json")
+    const basePath = getBasePath()
+    const response = await fetch(`${basePath}static/categories.json`)
     if (response.ok) {
       categoryConfigCache = await response.json() as CategoryConfig
       return categoryConfigCache
@@ -150,7 +160,8 @@ async function getSourceSettings(): Promise<SourceConfig> {
 
   try {
     // ビルド時に生成されたソース設定を読み込む
-    const response = await fetch("/static/_config/sources.json")
+    const basePath = getBasePath()
+    const response = await fetch(`${basePath}static/_config/sources.json`)
     if (response.ok) {
       const fileConfig = await response.json() as SourceConfig
 
@@ -285,7 +296,8 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
   }
   let customLinksConfig: CustomLinksConfig = { links: [], excludedLinks: [] }
   try {
-    const customLinksResponse = await fetch(`${document.location.origin}/static/customLinks.json`)
+    const basePath = getBasePath()
+    const customLinksResponse = await fetch(`${basePath}static/customLinks.json`)
     if (customLinksResponse.ok) {
       customLinksConfig = await customLinksResponse.json()
     }

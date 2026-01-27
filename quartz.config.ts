@@ -18,7 +18,7 @@ const config: QuartzConfig = {
     locale: "ja-JP",
     // 公開時に実際のGitHub PagesのURLに変更
     // 例: "goooichi51.github.io/AI_Skill_Map" または カスタムドメイン "ai-skill-map.example.com"
-    baseUrl: "your-username.github.io/AI_Skill_Map",
+    baseUrl: "goooichi51.github.io/ai-skill-tree",
     ignorePatterns: ["private", "templates", ".obsidian"],
     defaultDateType: "modified",
     theme: {

@@ -1,5 +1,12 @@
 const sourceSettingsKey = "source-settings"
 
+// ベースパスを取得（GitHub Pagesのサブパス対応）
+function getBasePath(): string {
+  const pathname = window.location.pathname
+  const match = pathname.match(/^\/[^\/]+\//)
+  return match ? match[0] : "/"
+}
+
 interface ChannelConfig {
   name: string
   color: string
@@ -37,7 +44,8 @@ async function getSourceSettings(): Promise<SourceConfig> {
   }
 
   try {
-    const response = await fetch("/static/_config/sources.json")
+    const basePath = getBasePath()
+    const response = await fetch(`${basePath}static/_config/sources.json`)
     if (!response.ok) return defaultConfig
     const config = (await response.json()) as SourceConfig
 
