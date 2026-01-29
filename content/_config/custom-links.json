@@ -39,6 +39,70 @@
     {
       "source": "skill-tree/automation/n8n",
       "target": "skill-tree/automation/1本で全て分かる初心者でも簡単に自動化究極のaiエージェントn8nの使い方・入門講座活用事例chatgptgoogleslack連携"
+    },
+    {
+      "source": "skill-tree/development/cluadecode",
+      "target": "skill-tree/development/ollama-launch-claude-code-glm-flash"
+    },
+    {
+      "source": "skill-tree/development/llm",
+      "target": "skill-tree/development/それマジまさかのopus45を超えた-kimi-k25が登場オープンソースで強力みたいなので確かめてみた"
+    },
+    {
+      "source": "skill-tree/development/antigravity",
+      "target": "skill-tree/development/動画や資料を自動生成無料のコーディングアプリgoogle-antigravityのスキル機能で高品質なパワポ資料excel動画webサイトを自動で作る方法"
+    },
+    {
+      "source": "skill-tree/tool/obsidian",
+      "target": "skill-tree/tool/obsidian迷いをゼロに限界まで削ぎ落とした究極のノート術テンプレ配布"
+    },
+    {
+      "source": "skill-tree/automation/n8n",
+      "target": "skill-tree/automation/claude-code-is-better-at-n8n-than-i-am-beginners-guide"
+    },
+    {
+      "source": "skill-tree/tool/moltbot",
+      "target": "skill-tree/tool/set-up-clawdbot-on-a-vps-in-minutes-no-mac-mini"
+    },
+    {
+      "source": "skill-tree/development/cluadecode",
+      "target": "skill-tree/development/完全保存版claude-codeを最強にする神設定開発効率がガチで別次元になる"
+    },
+    {
+      "source": "skill-tree/development/cluadecode",
+      "target": "skill-tree/development/everything-claude-codeでゴリゴリ開発している実況中継planテスト駆動開発レビューリファクタドキュメント更新を同時並行しまくるような流れ"
+    },
+    {
+      "source": "skill-tree/tool/moltbot",
+      "target": "skill-tree/tool/完全自動化エージェントたった1日でclawdbotでできるようになったこと10選"
+    },
+    {
+      "source": "skill-tree/frontier/ai-agents",
+      "target": "skill-tree/frontier/徹底格付け2026年1月版aiサービスtier今は一択の大エージェント時代なので解説"
+    },
+    {
+      "source": "skill-tree/development/cluadecode",
+      "target": "skill-tree/development/非エンジニア向け一番カンタンなclaude-codeの始め方"
+    },
+    {
+      "source": "skill-tree/frontier/ai-agents",
+      "target": "skill-tree/frontier/なぜ私は本をスキャンしてaiに読ませるのかjoi流・知識のデータベース化"
+    },
+    {
+      "source": "skill-tree/development/cluadecode",
+      "target": "skill-tree/development/aiとやってみたclaude-codeglm47でai組織ができた見てて楽しい結構クオリティー高いあきらパパさんありがとう"
+    },
+    {
+      "source": "skill-tree/generative-ai/video-generation",
+      "target": "skill-tree/generative-ai/世界中で注目動画生成のagent-skillsがremotionの公式から登場実際に使ってみたので解説します"
+    },
+    {
+      "source": "skill-tree/tool/obsidian",
+      "target": "skill-tree/tool/claude-code-obsidianで記事を執筆する実演動画"
+    },
+    {
+      "source": "skill-tree/frontier/ai-ethics",
+      "target": "skill-tree/frontier/ai素人の思いつくようなaiの限界はほぼ確実に破られる説"
     }
   ],
   "excludedLinks": []

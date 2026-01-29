@@ -153,6 +153,25 @@ ${category.name}に関するコンテンツです。
       fs.writeFileSync(path.join(catDir, "index.md"), indexContent)
     }
 
+    // ホームページにWikilinkを追加（グラフでリンクを表示するため）
+    const homeIndexPath = path.join(projectRoot, "content/index.md")
+    if (fs.existsSync(homeIndexPath)) {
+      let homeContent = fs.readFileSync(homeIndexPath, "utf-8")
+      const wikiLink = `- [[skill-tree/${category.id}/index|${category.name}]]`
+
+      // 既にリンクがあるかチェック
+      if (!homeContent.includes(`skill-tree/${category.id}/index`)) {
+        // カテゴリセクションの末尾にリンクを追加
+        const categoryRegex = /(## カテゴリ\n\n)([\s\S]*?)(\n\n##|\n---|\n\n---)/
+        const match = homeContent.match(categoryRegex)
+        if (match) {
+          const newCategorySection = match[1] + match[2].trimEnd() + "\n" + wikiLink + match[3]
+          homeContent = homeContent.replace(categoryRegex, newCategorySection)
+          fs.writeFileSync(homeIndexPath, homeContent)
+        }
+      }
+    }
+
     res.json({ success: true, message: `大カテゴリ「${category.name}」を追加しました`, category })
   } catch (error) {
     console.error("Add main category error:", error)

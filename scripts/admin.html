@@ -185,6 +185,51 @@
       opacity: 1;
     }
 
+    .tag-input-container {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .tag-input {
+      background: var(--bg);
+      border: 1px dashed var(--border);
+      border-radius: 100px;
+      padding: 0.25rem 0.75rem;
+      font-size: 0.8rem;
+      color: var(--text);
+      width: 120px;
+      outline: none;
+    }
+
+    .tag-input:focus {
+      border-color: var(--primary);
+      border-style: solid;
+    }
+
+    .tag-input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .btn-add-tag {
+      background: var(--success);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+    }
+
+    .btn-add-tag:hover {
+      background: #059669;
+    }
+
     .message {
       padding: 1rem;
       border-radius: 8px;
@@ -1951,19 +1996,68 @@
     // タグを描画
     function renderTags() {
       const tagsContainer = document.getElementById('previewTags');
-      if (!currentContent || !currentContent.suggestedTags) {
-        tagsContainer.innerHTML = '';
+
+      // タグがある場合は表示
+      let tagsHtml = '';
+      if (currentContent && currentContent.suggestedTags && currentContent.suggestedTags.length > 0) {
+        tagsHtml = currentContent.suggestedTags
+          .map((tag, index) => `<span class="tag" onclick="removeTag(${index})">${escapeHtml(tag)}<span class="remove-icon">✕</span></span>`)
+          .join('');
+      }
+
+      // タグ追加用の入力フィールドは常に表示
+      const inputHtml = `
+        <div class="tag-input-container">
+          <input type="text" class="tag-input" id="newTagInput" placeholder="タグを追加..." onkeypress="handleTagInputKeypress(event)">
+          <button class="btn-add-tag" onclick="addTagFromInput()" title="タグを追加">+</button>
+        </div>
+      `;
+
+      tagsContainer.innerHTML = tagsHtml + inputHtml;
+    }
+
+    // タグ入力でEnterキー押下時
+    function handleTagInputKeypress(event) {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        addTagFromInput();
+      }
+    }
+
+    // 入力フィールドからタグを追加
+    function addTagFromInput() {
+      const input = document.getElementById('newTagInput');
+      const newTag = input.value.trim();
+
+      if (!newTag) return;
+
+      if (!currentContent) {
+        currentContent = { suggestedTags: [] };
+      }
+      if (!currentContent.suggestedTags) {
+        currentContent.suggestedTags = [];
+      }
+
+      // 重複チェック
+      if (currentContent.suggestedTags.includes(newTag)) {
+        showMessage('このタグは既に追加されています', 'error');
         return;
       }
-      tagsContainer.innerHTML = currentContent.suggestedTags
-        .map(tag => `<span class="tag" onclick="removeTag('${tag}')">${tag}<span class="remove-icon">✕</span></span>`)
-        .join('');
+
+      currentContent.suggestedTags.push(newTag);
+      renderTags();
+
+      // 入力フィールドにフォーカスを戻す
+      setTimeout(() => {
+        const newInput = document.getElementById('newTagInput');
+        if (newInput) newInput.focus();
+      }, 10);
     }
 
     // タグを削除
-    function removeTag(tag) {
+    function removeTag(tagIndex) {
       if (!currentContent || !currentContent.suggestedTags) return;
-      currentContent.suggestedTags = currentContent.suggestedTags.filter(t => t !== tag);
+      currentContent.suggestedTags.splice(tagIndex, 1);
       renderTags();
     }
 

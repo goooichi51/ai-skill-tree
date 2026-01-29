@@ -19,5 +19,6 @@ CursorやGitHub Copilotなど、AIを活用したプログラミング支援ツ�
 - [[skill-tree/development/v0|v0]]
 - [[skill-tree/development/rag|RAG]]
 - [[skill-tree/development/mcp|MCP]]
-- [[skill-tree/development/multimodal|マルチモーダルAI]]
 - [[skill-tree/development/cluadecode|Claude Code]]
+- [[skill-tree/development/llm|その他LLM]]
+- [[skill-tree/development/antigravity|Antigravity]]

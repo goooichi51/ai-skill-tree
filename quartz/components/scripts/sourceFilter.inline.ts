@@ -2,9 +2,17 @@ const sourceSettingsKey = "source-settings"
 
 // ベースパスを取得（GitHub Pagesのサブパス対応）
 function getBasePath(): string {
-  const pathname = window.location.pathname
-  const match = pathname.match(/^\/[^\/]+\//)
-  return match ? match[0] : "/"
+  // GitHub Pagesのサブパス対応
+  // github.io でホストされている場合のみ、最初のパスセグメントをベースパスとして使用
+  const hostname = window.location.hostname
+  if (hostname.includes('github.io')) {
+    const pathname = window.location.pathname
+    // /ai-skill-tree/skill-tree/chat-ai/ のような場合、/ai-skill-tree/ を返す
+    const match = pathname.match(/^\/[^\/]+\//)
+    return match ? match[0] : "/"
+  }
+  // ローカル開発やカスタムドメインの場合は "/" を返す
+  return "/"
 }
 
 interface ChannelConfig {

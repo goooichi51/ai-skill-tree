@@ -93,3 +93,83 @@ http://localhost:3456 で以下の操作が可能：
 |---------|------|
 | `content/_config/custom-links.json` | カスタムリンク設定（追加リンク・除外リンク） |
 | `content/_config/sources.json` | ソース設定（YouTube/Note.com等のチャンネル・著者情報） |
+| `content/_config/categories.json` | 大カテゴリ設定（形状・色・タグ） |
+
+---
+
+## グラフのリンク設計
+
+### リンク階層構造
+
+```
+ホーム（index.md）
+  └── 大カテゴリ（skill-tree/xxx/index.md）
+        └── 中カテゴリ（skill-tree/xxx/yyy.md）
+              └── 小カテゴリ（YouTube/ブログ等のコンテンツ）
+```
+
+### リンクの作成方法
+
+| リンク種別 | 作成方法 | 設定場所 |
+|-----------|----------|----------|
+| ホーム → 大カテゴリ | Wikilink | `content/index.md` に `[[skill-tree/xxx/index\|カテゴリ名]]` を追加 |
+| 大カテゴリ → 中カテゴリ | 自動 | 大カテゴリの `index.md` にWikilinkを追加 |
+| 中カテゴリ → 小カテゴリ | カスタムリンク | `content/_config/custom-links.json` に追加 |
+
+### 重要ルール
+
+1. **大カテゴリ追加時**: 必ず `content/index.md` の「カテゴリ」セクションにWikilinkを追加する
+2. **コンテンツ追加時**: 管理ツールで「リンク先（中カテゴリ）」を指定すると自動的にカスタムリンクが作成される
+3. **リンク切れ防止**:
+   - 大カテゴリがホームに表示されない → `index.md` にWikilinkがない
+   - 小カテゴリがグラフに表示されない → `custom-links.json` にリンクがない
+
+### カスタムリンクの形式
+
+```json
+{
+  "links": [
+    {
+      "source": "skill-tree/xxx/中カテゴリ",
+      "target": "skill-tree/xxx/小カテゴリ（コンテンツ）"
+    }
+  ],
+  "excludedLinks": []
+}
+```
+
+---
+
+## タスク管理（Beads）
+
+このプロジェクトでは [Beads (bd)](https://github.com/steveyegge/beads) を使用してタスクを管理します。
+
+### 基本コマンド
+
+```bash
+bd ready                    # 実行可能なタスクを表示
+bd create "タスク名" -p 0   # 新しいタスク作成（P0=最優先）
+bd show <id>                # タスク詳細を表示
+bd done <id>                # タスクを完了
+bd list                     # 全タスク一覧
+```
+
+### タスク優先度
+
+- **P0**: 最優先（ブロッカー）
+- **P1**: 高優先度
+- **P2**: 通常
+- **P3**: 低優先度
+
+### 依存関係
+
+```bash
+bd dep add <子タスク> <親タスク>   # 依存関係を追加
+bd dep rm <子タスク> <親タスク>    # 依存関係を削除
+```
+
+### 運用ルール
+
+1. 大きな機能追加や複雑なバグ修正は `bd create` でタスク化する
+2. 作業開始時は `bd ready` で次にやるべきタスクを確認
+3. タスク完了時は `bd done <id>` で完了マーク
