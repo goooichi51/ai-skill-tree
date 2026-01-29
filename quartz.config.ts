@@ -12,7 +12,7 @@ const config: QuartzConfig = {
     pageTitleSuffix: " | AIスキルツリー",
     enableSPA: true,
     enablePopovers: true,
-    analytics: { provider: "google", tagId: "G-QPLX0DQG9N" },
+    analytics: { provider: "google", tagId: "G-XT63R3N04E" },
     locale: "ja-JP",
     // 公開時に実際のGitHub PagesのURLに変更
     // 例: "goooichi51.github.io/AI_Skill_Map" または カスタムドメイン "ai-skill-map.example.com"
